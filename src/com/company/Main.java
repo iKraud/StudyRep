@@ -22,7 +22,6 @@ public class Main {
                     System.out.println(arr[6]);
                     break;
                 case 3:
-//                    script = script/0;
                     throw new ArithmeticException("ArithmeticException перехвачено!");
                 default:
             }

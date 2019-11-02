@@ -8,28 +8,30 @@ public class Main {
         Scanner sc = new Scanner(System.in);
         System.out.println("1 для NullPointerException");
         System.out.println("2 для ArrayIndexOutOfBoundsException");
-        System.out.println("3 для сюрприза");
+        System.out.println("3 для ArithmeticException");
 
         try {
             int script = sc.nextInt();
             switch (script) {
                 case 1:
-                    throw new NullPointerException("demo");
+                    String nullString = null;
+                    nullString.length();
                     break;
                 case 2:
-                    throw new ArrayIndexOutOfBoundsException("demo");
+                    int [] arr = new int [5];
+                    System.out.println(arr[6]);
                     break;
                 case 3:
-                    break;
+//                    script = script/0;
+                    throw new ArithmeticException("ArithmeticException перехвачено!");
                 default:
-
             }
         }
         catch (NullPointerException e) {
-            System.out.println("Пойман NPE!");
+            System.out.println("NullPointerException перевачено!");
         }
         catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Пойман AIOOBE!");
+            System.out.println("ArrayIndexOutOfBoundsException перевачено!");
         }
         finally {
             System.out.println(hw);

@@ -2,6 +2,14 @@ package com.company;
 
 import java.util.Scanner;
 
+/**
+ *  Задание 1.
+ * Написать программу ”Hello, World!”. В ходе выполнения программы она должна выбросить исключение и завершиться с ошибкой.
+ *
+ * Смоделировав ошибку «NullPointerException»
+ * Смоделировав ошибку «ArrayIndexOutOfBoundsException»
+ * Вызвав свой вариант ошибки через оператор throw
+ */
 public class HomeWork1_Task1 {
     public static void main(String[] args) {
         String hw = "Hello, World!";
@@ -26,11 +34,10 @@ public class HomeWork1_Task1 {
                 default:
             }
         }
-        catch (NullPointerException e) {
-            System.out.println("NullPointerException перевачено!");
-        }
-        catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("ArrayIndexOutOfBoundsException перевачено!");
+        catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
+//            System.out.println("NullPointerException перевачено!");
+//            System.out.println(e);
+            throw e;
         }
         finally {
             System.out.println(hw);

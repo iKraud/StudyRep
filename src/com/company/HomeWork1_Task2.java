@@ -4,6 +4,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 /**
+ * @author Timohin Igor
  * Задание 2.
  * Составить программу, генерирующую N случайных чисел. Для каждого числа k вычислить квадратный корень q.
  * Если квадрат целой части q числа равен k, то вывести это число на экран.
@@ -20,15 +21,17 @@ public class HomeWork1_Task2 {
         for (int i=1;i<=n;i++) {
             int k=rnd.nextInt(30)*3-50;
             if (k<0) {
-                throw new IllegalArgumentException("Число должно быть положительным");
-            }
-            else {
-                double q = Math.sqrt(k);
-                if ((int)q==k){
-                    System.out.println(k);
+                try {
+                    throw new IllegalArgumentException();
+                }
+                catch (IllegalArgumentException e) {
+                    k=-k;
                 }
             }
+            double q = Math.sqrt(k);
+            if (Math.pow((int)q,2)==k){
+                System.out.println(k);
+            }
         }
-
     }
 }

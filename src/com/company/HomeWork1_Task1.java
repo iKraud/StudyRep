@@ -3,6 +3,7 @@ package com.company;
 import java.util.Scanner;
 
 /**
+ * @author Timohin Igor
  *  Задание 1.
  * Написать программу ”Hello, World!”. В ходе выполнения программы она должна выбросить исключение и завершиться с ошибкой.
  *
@@ -35,8 +36,6 @@ public class HomeWork1_Task1 {
             }
         }
         catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
-//            System.out.println("NullPointerException перевачено!");
-//            System.out.println(e);
             throw e;
         }
         finally {

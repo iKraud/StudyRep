@@ -1,4 +1,4 @@
-package lesson02.task02;
+package homeWork02;
 
 import java.util.Scanner;
 
@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Смоделировав ошибку «ArrayIndexOutOfBoundsException»
  * Вызвав свой вариант ошибки через оператор throw
  */
-public class HomeWork1_Task1 {
+public class Task1 {
     public static void main(String[] args) {
         String hw = "Hello, World!";
         Scanner sc = new Scanner(System.in);

@@ -1,4 +1,4 @@
-package lesson02.task02;
+package homeWork02;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Если квадрат целой части q числа равен k, то вывести это число на экран.
  * Предусмотреть что первоначальные числа могут быть отрицательные, в этом случае генерировать исключение.
  */
-public class HomeWork1_Task2 {
+public class Task2 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random rnd = new Random();

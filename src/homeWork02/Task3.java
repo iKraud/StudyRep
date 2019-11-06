@@ -19,29 +19,30 @@ public class Task3 {
 class Person {
     private int age;
     private String name;
-    Sex sex = new Sex();
-
+    private String sex;
+}
+enum Sex {
+    MAN, WOMAN;
 }
 
-class Sex {
-    final String man = "MAN";
-    final String woman = "WOMAN";
-}
 
 interface Sort {
-    int[] sort() {}
+    int[] sort();
 }
 
 class BubbleSort implements Sort {
-    int[] sort() {
-        for ...
-        for ...
+    public int[] sort() {
+        for (int i=0; i<10000; i++) {
+            for (int j=0; j<10000; j++) {
+                if
+            }
+        }
         swap()
     }
 }
 
 class ComparableSort implements Sort {
-    int[] sort() {
+    public int[] sort() {
 		...
     }
 }

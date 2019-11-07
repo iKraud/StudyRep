@@ -19,30 +19,44 @@ public class Task3 {
 class Person {
     private int age;
     private String name;
-    private String sex;
+    private Sex sex;
+
+    public int setAge (int age) {
+        if (age >= 0 && age <=100) {
+            this.age = age;
+        }
+    }
+    
+    public int setSex (int sex) {
+        if (sex == 0) {
+            this.sex = Sex.MAN;
+        } else {
+            this.sex = Sex.WOMAN;
+        }
+    }
 }
+
 enum Sex {
     MAN, WOMAN;
 }
 
+// interface Sort {
+//     int[] sort();
+// }
 
-interface Sort {
-    int[] sort();
-}
+// class BubbleSort implements Sort {
+//     public int[] sort() {
+//         for (int i=0; i<10000; i++) {
+//             for (int j=0; j<10000; j++) {
+//                 if
+//             }
+//         }
+//         swap()
+//     }
+// }
 
-class BubbleSort implements Sort {
-    public int[] sort() {
-        for (int i=0; i<10000; i++) {
-            for (int j=0; j<10000; j++) {
-                if
-            }
-        }
-        swap()
-    }
-}
-
-class ComparableSort implements Sort {
-    public int[] sort() {
-		...
-    }
-}
+// class ComparableSort implements Sort {
+//     public int[] sort() {
+// 		...
+//     }
+// }

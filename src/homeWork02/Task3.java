@@ -1,4 +1,5 @@
 package homeWork02;
+import java.util.Random;
 
 /**
  * Задание 3. Дан массив объектов Person. Класс Person характеризуется полями age (возраст, целое число 0-100), sex (пол – объект класса Sex со строковыми константами внутри MAN, WOMAN), name (имя - строка).
@@ -13,7 +14,13 @@ package homeWork02;
  */
 public class Task3 {
     public static void main(String[] args) {
-
+        Random rnd = new Random();
+        final int count = 10000;
+        Person[] person = new Person[count];
+        for (int i=0; i<count; i++) {
+            person[i] = new Person(rnd.nextInt(100), rnd.nextInt(26), rnd.nextInt(2));
+            System.out.println(person[i]);
+        }
     }
 }
 class Person {
@@ -21,18 +28,50 @@ class Person {
     private String name;
     private Sex sex;
 
-    public int setAge (int age) {
+    public void setAge (int age) {
         if (age >= 0 && age <=100) {
             this.age = age;
         }
     }
-    
-    public int setSex (int sex) {
+
+    public void setName (int name) {
+        this.name = 
+        String.valueOf(Character.forDigit (name+10,36))+
+        String.valueOf(Character.forDigit (name+11,36))+
+        String.valueOf(Character.forDigit (name+12,36))+
+        String.valueOf(Character.forDigit (name+9,36))+
+        String.valueOf(Character.forDigit (name+8,36));
+    }
+
+    public void setSex (int sex) {
         if (sex == 0) {
             this.sex = Sex.MAN;
         } else {
             this.sex = Sex.WOMAN;
         }
+    }
+
+    public int getAge () {
+        return age;
+    }
+
+    public String getName () {
+        return name;
+    }
+
+    public Sex getSex () {
+        return sex;
+    }
+
+    public Person (int age, int name, int sex) {
+        setAge(age);
+        setName(name);
+        setSex(sex);
+    }
+    
+    // @Override
+    public String toString () {
+        return ("age= "+age +", name= "+name +", sex= "+sex);
     }
 }
 

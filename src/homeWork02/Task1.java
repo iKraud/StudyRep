@@ -12,12 +12,12 @@ import java.util.Scanner;
  * Вызвав свой вариант ошибки через оператор throw
  */
 public class Task1 {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SomeException {
         String hw = "Hello, World!";
         Scanner sc = new Scanner(System.in);
         System.out.println("1 для NullPointerException");
         System.out.println("2 для ArrayIndexOutOfBoundsException");
-        System.out.println("3 для ArithmeticException");
+        System.out.println("3 для SomeException");
 
         try {
             int script = sc.nextInt();
@@ -31,7 +31,7 @@ public class Task1 {
                     System.out.println(arr[6]);
                     break;
                 case 3:
-                    throw new ArithmeticException("ArithmeticException перехвачено!");
+                    throw new SomeException("SomeException перехвачено!");
                 default:
             }
         }
@@ -41,5 +41,11 @@ public class Task1 {
         finally {
             System.out.println(hw);
         }
+    }
+}
+
+class SomeException extends Exception {
+    public SomeException (String message) {
+        super (message);
     }
 }

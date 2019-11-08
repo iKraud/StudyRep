@@ -1,5 +1,7 @@
 package homeWork02;
+
 import java.util.Random;
+import java.util.Arrays;
 
 /**
  * Задание 3. Дан массив объектов Person. Класс Person характеризуется полями age (возраст, целое число 0-100), sex (пол – объект класса Sex со строковыми константами внутри MAN, WOMAN), name (имя - строка).
@@ -15,11 +17,12 @@ import java.util.Random;
 public class Task3 {
     public static void main(String[] args) {
         Random rnd = new Random();
-        final int count = 10000;
+        final int count = 3000;
         Person[] person = new Person[count];
         for (int i=0; i<count; i++) {
             person[i] = new Person(rnd.nextInt(100), rnd.nextInt(26), rnd.nextInt(2));
             System.out.println(person[i]);
+            Person.Compare(person,i);
         }
     }
 }
@@ -36,11 +39,11 @@ class Person {
 
     public void setName (int name) {
         this.name = 
-        String.valueOf(Character.forDigit (name+10,36))+
-        String.valueOf(Character.forDigit (name+11,36))+
-        String.valueOf(Character.forDigit (name+12,36))+
-        String.valueOf(Character.forDigit (name+9,36))+
-        String.valueOf(Character.forDigit (name+8,36));
+        String.valueOf(Character.forDigit (name+10,36));
+        // String.valueOf(Character.forDigit (name+11,36)) +
+        // String.valueOf(Character.forDigit (name+12,36)) +
+        // String.valueOf(Character.forDigit (name+8,36)) +
+        // String.valueOf(Character.forDigit (name+9,36));
     }
 
     public void setSex (int sex) {
@@ -68,10 +71,27 @@ class Person {
         setName(name);
         setSex(sex);
     }
+
+    public static void Compare (Person[] p, int element) {
+        for (int i = 0; i <=element; i++) {
+            if (i != element) {
+                if ((p[i].getAge()==p[element].getAge()) &&
+                   (p[i].getName()==p[element].getName())) {
+            
+                    System.out.println("У элементов "+i+" и "+element+" возраст и имя совпали!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    return;
+               }
+            }
+            // if (i != element && p[i].getAge()==p[element].getAge()) {
+            //     System.out.println(i+" и "+element+" совпали ");
+            //     return;
+            // }
+        }
+    }
     
-    // @Override
+    @Override
     public String toString () {
-        return ("age= "+age +", name= "+name +", sex= "+sex);
+        return ("age="+age +", name="+name +", sex="+sex);
     }
 }
 

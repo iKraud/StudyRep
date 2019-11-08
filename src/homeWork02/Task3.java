@@ -17,12 +17,17 @@ import java.util.Arrays;
 public class Task3 {
     public static void main(String[] args) {
         Random rnd = new Random();
-        final int count = 3000;
+        final int count = 1000;
         Person[] person = new Person[count];
         for (int i=0; i<count; i++) {
             person[i] = new Person(rnd.nextInt(100), rnd.nextInt(26), rnd.nextInt(2));
             System.out.println(person[i]);
-            Person.Compare(person,i);
+            try {
+                Person.Compare(person,i);
+            }
+            catch (SameNameSameAgeException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 }
@@ -39,11 +44,11 @@ class Person {
 
     public void setName (int name) {
         this.name = 
-        String.valueOf(Character.forDigit (name+10,36));
-        // String.valueOf(Character.forDigit (name+11,36)) +
-        // String.valueOf(Character.forDigit (name+12,36)) +
-        // String.valueOf(Character.forDigit (name+8,36)) +
-        // String.valueOf(Character.forDigit (name+9,36));
+        String.valueOf(Character.forDigit (name+10,36))+
+        String.valueOf(Character.forDigit (name+11,36)) +
+        String.valueOf(Character.forDigit (name+12,36)) +
+        String.valueOf(Character.forDigit (name+8,36)) +
+        String.valueOf(Character.forDigit (name+9,36));
     }
 
     public void setSex (int sex) {
@@ -72,23 +77,18 @@ class Person {
         setSex(sex);
     }
 
-    public static void Compare (Person[] p, int element) {
+    public static void Compare (Person[] p, int element) throws SameNameSameAgeException {
         for (int i = 0; i <=element; i++) {
             if (i != element) {
-                if ((p[i].getAge()==p[element].getAge()) &&
-                   (p[i].getName()==p[element].getName())) {
-            
-                    System.out.println("У элементов "+i+" и "+element+" возраст и имя совпали!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    return;
+                if ((p[i].getAge()==p[element].getAge()) &
+                    (p[i].getName().equals(p[element].getName()))) {
+
+                    throw new SameNameSameAgeException ("У людей "+i+" и "+element+" возраст и имя совпали");
                }
             }
-            // if (i != element && p[i].getAge()==p[element].getAge()) {
-            //     System.out.println(i+" и "+element+" совпали ");
-            //     return;
-            // }
         }
     }
-    
+
     @Override
     public String toString () {
         return ("age="+age +", name="+name +", sex="+sex);
@@ -97,6 +97,12 @@ class Person {
 
 enum Sex {
     MAN, WOMAN;
+}
+
+class SameNameSameAgeException extends Exception {
+    public SameNameSameAgeException (String message) {
+        super (message);
+    }
 }
 
 // interface Sort {

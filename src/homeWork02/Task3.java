@@ -1,7 +1,6 @@
 package homeWork02;
 
 import java.util.Random;
-import java.util.Arrays;
 
 /**
  * Задание 3. Дан массив объектов Person. Класс Person характеризуется полями age (возраст, целое число 0-100), sex (пол – объект класса Sex со строковыми константами внутри MAN, WOMAN), name (имя - строка).
@@ -15,12 +14,17 @@ import java.util.Arrays;
  * Если имена людей и возраст совпадают, выбрасывать в программе пользовательское исключение.
  */
 public class Task3 {
+    final static int count = 1000;
     public static void main(String[] args) {
         Random rnd = new Random();
-        final int count = 1000;
+        
         Person[] person = new Person[count];
         for (int i=0; i<count; i++) {
             person[i] = new Person(rnd.nextInt(100), rnd.nextInt(26), rnd.nextInt(2));
+        }
+        IntSort isort = new BubbleSort();
+        isort.sort(person);
+        for (int i=0; i<count; i++) {
             System.out.println(person[i]);
             try {
                 Person.Compare(person,i);
@@ -42,6 +46,10 @@ class Person {
         }
     }
 
+    public int getAge () {
+        return age;
+    }
+    
     public void setName (int name) {
         this.name = 
         String.valueOf(Character.forDigit (name+10,36))+
@@ -51,20 +59,16 @@ class Person {
         String.valueOf(Character.forDigit (name+9,36));
     }
 
+    public String getName () {
+        return name;
+    }
+    
     public void setSex (int sex) {
         if (sex == 0) {
             this.sex = Sex.MAN;
         } else {
             this.sex = Sex.WOMAN;
         }
-    }
-
-    public int getAge () {
-        return age;
-    }
-
-    public String getName () {
-        return name;
     }
 
     public Sex getSex () {
@@ -83,7 +87,7 @@ class Person {
                 if ((p[i].getAge()==p[element].getAge()) &
                     (p[i].getName().equals(p[element].getName()))) {
 
-                    throw new SameNameSameAgeException ("У людей "+i+" и "+element+" возраст и имя совпали");
+                    throw new SameNameSameAgeException ("У людей с ID "+i+" и "+element+" возраст и имя совпали");
                }
             }
         }
@@ -105,20 +109,34 @@ class SameNameSameAgeException extends Exception {
     }
 }
 
-// interface Sort {
-//     int[] sort();
-// }
+interface IntSort {
+   void sort(Person[] p);
+}
 
-// class BubbleSort implements Sort {
-//     public int[] sort() {
-//         for (int i=0; i<10000; i++) {
-//             for (int j=0; j<10000; j++) {
-//                 if
-//             }
-//         }
-//         swap()
-//     }
-// }
+class BubbleSort implements IntSort {
+    public void sort(Person[] p) {
+        for (int i=Task3.count-1; i>=1; i--) {
+            for (int j=0; j<i; j++) {
+                if (p[j].getAge() > p[j+1].getAge()) {
+                    swap(p,j,j+1);
+                }
+            }
+        }
+    }
+    public void swap(Person[] p, int jCur, int jNext) {
+        Person temp = p[jCur];
+        p[jCur]=p[jNext];
+        p[jNext]=temp;
+    }
+    // public int[] sort() {
+    //     for (int i=0; i<10000; i++) {
+    //         for (int j=0; j<10000; j++) {
+    //             if
+    //         }
+    //     }
+    //     swap()
+    // }
+}
 
 // class ComparableSort implements Sort {
 //     public int[] sort() {

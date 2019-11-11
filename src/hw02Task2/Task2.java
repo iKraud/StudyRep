@@ -1,4 +1,4 @@
-package homeWork02;
+package hw02Task2;
 
 import java.util.Random;
 import java.util.Scanner;

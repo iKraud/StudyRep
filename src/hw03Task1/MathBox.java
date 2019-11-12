@@ -1,18 +1,40 @@
 package hw03Task1;
 
-/**
- * @author "Timohin Igor"
- *
- * Задание 1. Написать класс MathBox, реализующий следующий функционал:
- *
- * Конструктор на вход получает массив Number. Элементы не могут повторяться. Элементы массива внутри объекта раскладываются в подходящую коллекцию (выбрать самостоятельно).
- * Существует метод summator, возвращающий сумму всех элементов коллекции.
- * Существует метод splitter, выполняющий поочередное деление всех хранящихся в объекте элементов на делитель, являющийся аргументом метода.
- * Хранящиеся в объекте данные полностью заменяются результатами деления.
- * Необходимо правильно переопределить методы toString, hashCode, equals, чтобы можно было использовать MathBox
- * для вывода данных на экран и хранение объектов этого класса в коллекциях (например, hashMap). Выполнение контракта обязательно!
- * Создать метод, который получает на вход Integer и если такое значение есть в коллекции, удаляет его.
- */
-public class MathBox {
+import javax.management.StandardEmitterMBean;
+import java.util.TreeSet;
 
+public class MathBox {
+    TreeSet<Number> coll = new TreeSet <>();
+    public MathBox(Number[] number) {
+        int nl = number.length;
+        for (int i=0; i<nl; i++) {
+            coll.add(number[i]);
+        }
+    }
+    public int summator () {
+        int sum = 0;
+        for (Number ts : coll) {
+            sum += ts.intValue();
+        }
+        return sum;
+    }
+
+    public void splitter (int d) {
+        float temp;
+        for (Number ts : coll) {
+            temp = (float)ts / d;
+            coll.remove(ts);
+            coll.add(temp);
+        }
+    }
+
+    @Override
+    public String toString() {
+        String totalString = "";
+        for (Number ts : coll) {
+            totalString += ts+", ";
+        }
+
+        return totalString.substring(0,totalString.length()-2);
+    }
 }

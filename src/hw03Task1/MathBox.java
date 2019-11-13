@@ -1,9 +1,25 @@
 package hw03Task1;
 
-import javax.management.StandardEmitterMBean;
+import hw03Task2.ObjectBox;
+
+import java.util.Objects;
 import java.util.TreeSet;
 
-class MathBox {
+/**
+ * @author "Timohin Igor"
+ *
+ * Задание 1. Написать класс MathBox, реализующий следующий функционал:
+ *
+ * Конструктор на вход получает массив Number. Элементы не могут повторяться. Элементы массива внутри объекта раскладываются в подходящую коллекцию (выбрать самостоятельно).
+ * Существует метод summator, возвращающий сумму всех элементов коллекции.
+ * Существует метод splitter, выполняющий поочередное деление всех хранящихся в объекте элементов на делитель, являющийся аргументом метода.
+ * Хранящиеся в объекте данные полностью заменяются результатами деления.
+ * Необходимо правильно переопределить методы toString, hashCode, equals, чтобы можно было использовать MathBox
+ * для вывода данных на экран и хранение объектов этого класса в коллекциях (например, hashMap). Выполнение контракта обязательно!
+ * Создать метод, который получает на вход Integer и если такое значение есть в коллекции, удаляет его.
+ */
+
+public class MathBox extends ObjectBox{
 /**
  * Создаём коллекцию
  */
@@ -13,6 +29,10 @@ class MathBox {
         for (int i=0; i<nl; i++) {
             coll.add(number[i]);
         }
+    }
+
+    public MathBox(Object o) throws ObjectInMathBox{
+        throw new ObjectInMathBox ("Класс " + MathBox.class + " может принимать только массивы в качестве аргументов");
     }
 /**
  * Метод суммирующий элементы коллекции
@@ -43,22 +63,6 @@ class MathBox {
             coll.remove(d.doubleValue());
         }
     }
-    
-//     // public void remover (Integer d) {
-//     //     boolean b;
-//     //     try {
-//     //         b = coll.contains(d);
-//     //     }
-//     //     catch (ClassCastException e) {
-//     //         b = coll.contains((float)d);
-//     //     }
-//     //     finally {
-//     //         if (b) {
-//     //             coll.remove(d);
-//     //         }
-//     //     }
-//     // }
-
 
     @Override
     public String toString() {
@@ -67,5 +71,18 @@ class MathBox {
             totalString += el+", ";
         }
         return totalString.substring(0,totalString.length()-2);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MathBox)) return false;
+        MathBox mathBox = (MathBox) o;
+        return Objects.equals(coll, mathBox.coll);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(coll);
     }
 }

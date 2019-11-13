@@ -1,14 +1,31 @@
 package hw03Task2;
 
+import java.util.TreeSet;
+
 /**
+ * @author "Timohin Igor"
+ *
  * Задание 2. Создать класс ObjectBox, который будет хранить коллекцию Object.
  * У класса должен быть метод addObject, добавляющий объект в коллекцию.
  * У класса должен быть метод deleteObject, проверяющий наличие объекта в коллекции и при наличии удаляющий его.
  * Должен быть метод dump, выводящий содержимое коллекции в строку.
- *
- * Задание 3. Доработать классы MathBox и ObjectBox таким образом, чтобы MathBox был наследником ObjectBox.
- * Необходимо сделать такую связь, правильно распределить поля и методы. Функциональность в целом должна сохраниться.
- * При попытке положить Object в MathBox должно создаваться исключение.
  */
 public class ObjectBox {
+    TreeSet<Object> coll = new TreeSet<>();
+
+    public void addObject (Object o) {
+        coll.add(o);
+    }
+
+    public void deleteObject (Object o) {
+        if (coll.contains(o)) {
+            coll.remove(o);
+        }
+    }
+
+    public void dump () {
+        for (Object o : coll) {
+            System.out.println(o.toString());
+        }
+    }
 }

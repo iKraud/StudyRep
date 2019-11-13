@@ -42,7 +42,6 @@ class BubbleSort implements Sort {
                 }
             }
         }
-
     }
     private void swap(Person[] p, int jCur, int jNext) {
         Person temp = p[jCur];

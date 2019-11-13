@@ -17,9 +17,16 @@ package hw03Task1;
 public class Main {
     public static void main(String[] args) {
         Number[] number = {1,2,3,3,4,5};
+        for (Number el : number) {
+            System.out.print(el + " ");
+        }
+        System.out.println();
+
         MathBox mathBox = new MathBox(number);
         System.out.println(mathBox.summator());
         mathBox.splitter(2);
+        System.out.println(mathBox);
+        mathBox.remover(1);
         System.out.println(mathBox);
     }
 }

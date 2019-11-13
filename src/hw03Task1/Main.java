@@ -25,8 +25,8 @@ public class Main {
         System.out.println(mathBox);
 
         ObjectBox objectBox = new ObjectBox();
-//        MathBox mathBox1 = new MathBox(objectBox);
+//        MathBox mathBox1 = new MathBox(objectBox); //для проверки наличия исключения при добавлении объекта в MathBox
         objectBox.addObject(mathBox);
-        objectBox.dump();
+//        objectBox.dump();
     }
 }

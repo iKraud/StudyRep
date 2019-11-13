@@ -36,7 +36,7 @@ public class MathBox extends ObjectBox{
     }
 /**
  * Метод суммирующий элементы коллекции
- */ 
+ */
     public Number summator () {
         double sum = 0;
         for (Number el : coll) {
@@ -46,7 +46,7 @@ public class MathBox extends ObjectBox{
     }
 /**
  * Метод перезаписывающий имеющующся коллекцию элементами, поделёнными на определённый делитель
- */ 
+ */
     public void splitter (double d) {
         TreeSet<Number> temp = new TreeSet<>();
         for (Number el : coll) {

@@ -3,6 +3,7 @@ package hw03Task1;
 import hw03Task2.ObjectBox;
 
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeSet;
 
 /**
@@ -19,19 +20,21 @@ import java.util.TreeSet;
  * Создать метод, который получает на вход Integer и если такое значение есть в коллекции, удаляет его.
  */
 
-public class MathBox extends ObjectBox{
+public class MathBox <T extends Number> extends ObjectBox {
 /**
  * Создаём коллекцию
  */
-    TreeSet<Number> coll = new TreeSet<>();
-    public MathBox(Number[] number) {
+    Set<Number> coll = new TreeSet<>();
+// если <T super Number> (или extends) - то "Unexpected bound"
+// если просто <T> - то в  методе splitter ругается, когда в эту же коллекцию вместо первоначального int кладу double
+    public MathBox (T[] number) {
         int nl = number.length;
         for (int i=0; i<nl; i++) {
             coll.add(number[i]);
         }
     }
 
-    public MathBox(Object o) throws ObjectInMathBox{
+    public MathBox (Object o) throws ObjectInMathBox {
         throw new ObjectInMathBox ("Класс " + MathBox.class + " может принимать только массивы в качестве аргументов");
     }
 /**
@@ -48,7 +51,9 @@ public class MathBox extends ObjectBox{
  * Метод перезаписывающий имеющующся коллекцию элементами, поделёнными на определённый делитель
  */
     public void splitter (double d) {
-        TreeSet<Number> temp = new TreeSet<>();
+        Set<Number> temp = new TreeSet<>();
+// если <T super Number> (или extends) - "Unexpected bound"
+// если <T> - то ругается при делении, мол деление не может быть применено к int, T
         for (Number el : coll) {
             temp.add((el.intValue() / d));
         }
@@ -65,7 +70,7 @@ public class MathBox extends ObjectBox{
     }
 
     @Override
-    public String toString() {
+    public String toString () {
         String totalString = "";
         for (Number el : coll) {
             totalString += el+", ";
@@ -74,7 +79,7 @@ public class MathBox extends ObjectBox{
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals (Object o) {
         if (this == o) return true;
         if (!(o instanceof MathBox)) return false;
         MathBox mathBox = (MathBox) o;
@@ -82,7 +87,7 @@ public class MathBox extends ObjectBox{
     }
 
     @Override
-    public int hashCode() {
+    public int hashCode () {
         return Objects.hash(coll);
     }
 }

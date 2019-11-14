@@ -1,6 +1,7 @@
 package hw03Task2;
 
-import java.util.TreeSet;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * @author "Timohin Igor"
@@ -11,7 +12,7 @@ import java.util.TreeSet;
  * Должен быть метод dump, выводящий содержимое коллекции в строку.
  */
 public class ObjectBox {
-    TreeSet<Object> coll = new TreeSet<>();
+    List<Object> coll = new ArrayList<>();
 
     public void addObject (Object o) {
         coll.add(o);
@@ -25,7 +26,7 @@ public class ObjectBox {
 
     public void dump () {
         for (Object o : coll) {
-            System.out.println(o.toString());
+            System.out.println(o);
         }
     }
 }

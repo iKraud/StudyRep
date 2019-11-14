@@ -13,8 +13,8 @@ import java.util.Random;
  * Предусмотреть генерацию исходного массива (10000 элементов и более).
  * Если имена людей и возраст совпадают, выбрасывать в программе пользовательское исключение.
  */
-public class Task3 {
-    final static int count = 10000;
+public class Main {
+    final static int count = 5000;
     public static void main(String[] args) {
         long bubbleStartTime, bubbleTimeSpent, compStartTime, compTimeSpent;
         Random rnd = new Random();
@@ -28,22 +28,12 @@ public class Task3 {
 /**
  * Сортировка пузырьком
  */
-        bubbleStartTime = System.currentTimeMillis();
-        Sort bubbleSort = new BubbleSort();
-        bubbleSort.sort(person);
-        bubbleTimeSpent = System.currentTimeMillis() - bubbleStartTime;
-/**
- * Вывод тёсок-погодок
- */
-        for (int i=0; i<count; i++) {
-            System.out.println(person[i]);
-            try {
-                Person.Compare(person,i);
-            }
-            catch (SameNameSameAgeException e) {
-                System.out.println(e.getMessage());
-            }
-        }
+//        bubbleStartTime = System.currentTimeMillis();
+//        Sort bubbleSort = new BubbleSort();
+//        bubbleSort.sort(person);
+//        bubbleTimeSpent = System.currentTimeMillis() - bubbleStartTime;
+//
+//        sameNameSameAge(person);
 /**
  * Сортировка сравнением
  */
@@ -51,9 +41,16 @@ public class Task3 {
         Sort comparableSort = new ComparableSort();
         comparableSort.sort(person);
         compTimeSpent = System.currentTimeMillis() - compStartTime;
+
+        sameNameSameAge(person);
+
+//        System.out.println("Сортировка пузырьком " + bubbleTimeSpent + " миллисекунд");
+        System.out.println("Сортировка сравнением " + compTimeSpent + " миллисекунд");
+    }
 /**
  * Вывод тёсок-погодок
  */
+    public static void sameNameSameAge (Person[] person) {
         for (int i=0; i<count; i++) {
             System.out.println(person[i]);
             try {
@@ -63,7 +60,5 @@ public class Task3 {
                 System.out.println(e.getMessage());
             }
         }
-        System.out.println("Сортировка пузырьком " + bubbleTimeSpent + " миллисекунд");
-        System.out.println("Сортировка сравнением " + compTimeSpent + " миллисекунд");
     }
 }

@@ -26,7 +26,7 @@ public class Main {
 
         ObjectBox objectBox = new ObjectBox();
 //        MathBox mathBox1 = new MathBox(objectBox); //для проверки наличия исключения при добавлении объекта в MathBox
-        objectBox.addObject(mathBox);
+        objectBox.addObject(mathBox); // Вот тут выдаёт ClassCastException
 //        objectBox.dump();
     }
 }

@@ -1,34 +1,69 @@
 package hw05Task1;
 
-import java.util.TreeSet;
+import java.util.Objects;
 
 class Animal {
-    TreeSet<Animal> animal= new TreeSet<>();
-    private int id;
+    static int count = 0;
+    private int id = 0;
     private String nickname;
     private Person owner;
     private double weight;
 
-    public Animal (String nickname, Person owner, double weight) throws SuchDogIsAlreadyExist {
-        if (animal.contains(nickname)) {
-            throw new SuchDogIsAlreadyExist("Собака с такой кличкой уже есть в базе");
-        } else {
-            setNickname(nickname);
-            this.owner = owner;
-            this.weight = weight;
-        }
+    public Animal (String nickname, Person owner, double weight) {
+       count += 1;
+       setId();
+       setNickname(nickname);
+       setOwner(owner);
+       setWeight(weight);
+    }
+    public void setId() {
+        this.id = count;
     }
     public int getId () {
         return id;
     }
     public void setNickname (String nickname) {
-        this.nickname = nickname;
+        if (!nickname.equals("")) {
+            this.nickname = nickname;
+        } else {
+            this.nickname = "Клички пока нет";
+        }
     }
     public String getNickname () {
         return nickname;
     }
-
+    public void setOwner(Person owner) {
+        this.owner = owner;
+    }
+    public Person getOwner() {
+        return owner;
+    }
     public void setWeight (double weight) {
-        this.weight = weight;
+        if (weight > 0) {
+            this.weight = weight;
+        }
+    }
+    public double getWeight() {
+        return weight;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Animal)) return false;
+        Animal animal = (Animal) o;
+        return  Double.compare(animal.weight, weight) == 0 &&
+                nickname.equals(animal.nickname) &&
+                owner.equals(animal.owner);
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(nickname, owner, weight);
+    }
+    @Override
+    public String toString() {
+        return "{кличка='" + nickname + '\'' +
+                ", вес=" + weight + '}' +
+                ", хозяин=" + owner;
     }
 }

@@ -32,4 +32,11 @@ class Person {
     public Sex getSex () {
         return sex;
     }
+
+    @Override
+    public String toString() {
+        return "{имя='" + name + '\'' +
+                ", возраст=" + age +
+                ", пол=" + sex + '}';
+    }
 }

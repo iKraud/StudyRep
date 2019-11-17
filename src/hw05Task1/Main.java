@@ -1,6 +1,8 @@
 package hw05Task1;
 
 /**
+ * @author "Timohin Igor"
+ *
  * Разработать программу – картотеку домашних животных. У каждого животного есть уникальный идентификационный номер, кличка, хозяин (объект класс Person с полями – имя, возраст, пол), вес.
  *
  * Реализовать:
@@ -13,7 +15,6 @@ package hw05Task1;
 
 public class Main {
     public static void main(String []args) throws SuchPetIsAlreadyExist {
-
         Person owner1 = new Person ("Adam",21,0);
         Person owner2 = new Person ("Briana",22,1);
         Person owner3 = new Person ("Clair",23,1);
@@ -24,7 +25,7 @@ public class Main {
         Animal animal4 = new Animal ("Kitty",owner2,55.55);
         Animal animal5 = new Animal ("Fluffy",owner3,33.3);
 
-        Animal animal6 = new Animal ("Kitty",owner2,22.2);
+        Animal animal6 = new Animal ("Kitty",owner2,22.2); // для проверки исключения дублей
 
         PetList petList = new PetList();
         petList.addPet(animal1);

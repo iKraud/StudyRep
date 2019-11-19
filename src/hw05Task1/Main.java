@@ -14,7 +14,7 @@ package hw05Task1;
  */
 
 public class Main {
-    public static void main(String []args) throws SuchPetIsAlreadyExist {
+    public static void main(String []args) throws DuplicatePetException {
         Person owner1 = new Person ("Adam",21,0);
         Person owner2 = new Person ("Briana",22,1);
         Person owner3 = new Person ("Clair",23,1);

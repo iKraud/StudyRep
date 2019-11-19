@@ -6,12 +6,12 @@ import java.util.List;
 public class PetList {
     List<Animal> petList = new ArrayList<>();
 
-    public void addPet (Animal animal) throws SuchPetIsAlreadyExist {
+    public void addPet (Animal animal) throws DuplicatePetException {
         for (Animal an : petList) {
             if (an.equals(animal)) {
                 petList.remove(animal);
                 Animal.count -= 1;
-                throw new SuchPetIsAlreadyExist("Питомец: " + animal + " уже есть в базе");
+                throw new DuplicatePetException("Питомец: " + animal + " уже есть в базе");
             }
         }
         petList.add(animal);

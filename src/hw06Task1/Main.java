@@ -1,6 +1,8 @@
 package hw06Task1;
 
 import java.io.*;
+import java.util.*;
+
 /**
  * @author "Timohin Igor"
  *
@@ -10,17 +12,36 @@ import java.io.*;
  */
 
 public class Main{
-    public static void main(String []args) throws IOException{
-        // //нужно работать с потоком, не с nio
-        // nio //пример из лекции
-        // strList = Files.readAllFiles(Paths.get(note.txt)); //пример из лекции
-        // strList.forEach(System.out::println); //пример из лекции
-        
-        byte[] arr = "Hello МИР!".getBytes();
-        InputStream byteArrayInputStream = new ByteArrayInputStream (arr);
-        int b;
-        while ((b = byteArrayInputStream.read()) != -1) {
-            System.out.print((char)b);
+    public static void main(String []args) throws IOException {
+// Words.txt в две строки:
+// One two три Три Четыре пЯтЬ
+// Шесть сЕмь eight nInE teN
+        BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream("Words.txt"),  "UTF8"));
+        String s = "";
+        while (fis.ready()) {
+            s += fis.readLine() + " ";
         }
+        fis.close();
+        System.out.println("Исходный набор:");
+        System.out.println(s);
+        s = s.trim().toLowerCase();
+
+        String[] temp;
+        temp = s.split(" ");
+        Set<String> setOfWords = new TreeSet<>();
+        int sl = temp.length;
+        for (int i = 0; i < sl; i++) {
+            setOfWords.add(temp[i]);
+        }
+        s="";
+        for (String el : setOfWords) {
+            s += el + " ";
+        }
+        s = s.trim();
+        FileOutputStream fos = new FileOutputStream("WordsFinal.txt");
+        fos.write(s.getBytes());
+        fos.close();
+        System.out.println("Выходной набор успешно записан в файл:");
+        System.out.println(s);
     }
 }

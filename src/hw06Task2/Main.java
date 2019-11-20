@@ -21,33 +21,61 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         Random rnd = new Random();
-        int wordsInSentence; //слов в предложении 1<=n1<=15
         int lettersInWord; //латинских букв в слове 1<=n2<=15
-        int sentenceInParagrarh; //предложений в абзаце 1<=n3<=20
-
         int probability = 10; //вероятность вхождения одного из слов массива в следующее предложение (1/probability)
         int amountOfFiles = 10; // файлов нужно сформировать
         // String path = "Путь:\\" //путь для сохранения файлов
-        // количество абзацев getFiles - size
 
         // генерация дополнительного массива слов
         int wordsInAdditionalArray = 40; //rnd.nextInt(1000); //слов в дополнительном массиве 1<=n4<=1000
 
-        List<String> AdditionalArray = new ArrayList<>();
+        List<String> additionalArray = new ArrayList<>();
         for (int i = 0; i < wordsInAdditionalArray; i++) {
-            String additionalWord = "";
+            String word = "";
             lettersInWord = rnd.nextInt(14)+1; //латинских букв в слове 1<=n2<=15
             for (int j = 0; j < lettersInWord; j++) {
-                additionalWord += String.valueOf(Character.forDigit(rnd.nextInt(35-10)+10,36));
+                word += String.valueOf(Character.forDigit(rnd.nextInt(35-10)+10,36));
             }
-            AdditionalArray.add(additionalWord);
+            additionalArray.add(word);
         }
-        for (String el : AdditionalArray) {
+        for (String el : additionalArray) {
             System.out.println(el);
         }
         // генерация дополнительного массива слов
-        
-        
+
+        // создание параграфов
+        List<String> sentenceArray = new ArrayList<>();
+        int wordsInSentence = rnd.nextInt(14)+1; //слов в предложении 1<=n1<=15
+        int sentenceInParagrarh = rnd.nextInt(19)+1; //предложений в абзаце 1<=n3<=20
+        int amountOfParagraph = 10; // количество абзацев getFiles - size
+        for (int par = 0; par < amountOfParagraph; par++) {
+            for (int sent = 0; sent < sentenceInParagrarh; sent++) {
+                for (int wordCount = 0; wordCount < wordsInSentence; wordCount++) {
+                    String word = "";
+                    lettersInWord = rnd.nextInt(14)+1; //латинских букв в слове 1<=n2<=15
+                    for (int j = 0; j < lettersInWord; j++) {
+                        word += String.valueOf(Character.forDigit(rnd.nextInt(35-10)+10,36));
+                    }
+                    sentenceArray.add(word);
+                    sentenceArray.add(" ");
+                }
+                sentenceArray[0] = sentenceArray[0].toUpperCase; // Предложение начинается с заглавной буквы
+                sentenceArray.remove(sentenceArray.size()); //удаляем последний пробел
+                switch (rnd.nextInt(4)) { // Предложение заканчивается (.|!|?)+" "
+                    case 0:
+                        sentenceArray.add("! ");
+                        break;
+                    case 1:
+                        sentenceArray.add("? ");
+                        break;
+                    default:
+                        sentenceArray.add(". ");
+                }
+            }
+            sentenceArray.remove(sentenceArray.size()); //удаляем последний пробел
+            sentenceArray.add("\n\r"); // В конце абзаца стоит разрыв строки и перенос каретки.
+        }
+        // создание параграфов
     }
         
 }

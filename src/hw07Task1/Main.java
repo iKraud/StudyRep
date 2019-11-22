@@ -1,5 +1,11 @@
 package hw07Task1;
 
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.*;
+
 /**
  * Дан массив случайных чисел. Написать программу для вычисления факториалов всех элементов массива. Использовать пул потоков для решения задачи.
  *
@@ -12,11 +18,67 @@ package hw07Task1;
  * 2) распараллеливать вычисления для разных чисел
  * 3) комбинированный
  *
- * При чем вычислив факториал для одного числа, можно запомнить эти данные и использовать их для вычисления другого, что будет гораздо быстрее
+ * Причём вычислив факториал для одного числа, можно запомнить эти данные и использовать их для вычисления другого, что будет гораздо быстрее
  */
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+/**
+ * создание изначального массива случайных чисел
+ */
+        long startTimer = System.currentTimeMillis();
+        List<Integer> mainList = new ArrayList<>();
+        Random rnd = new Random();
+        int amountOfNumbers = 100;
+        for (int i = 0; i < amountOfNumbers; i++) {
+            mainList.add(rnd.nextInt(100)+1); // от 1 до 10 включительно
+        }
+/**
+ * создание потоков, количеством, равным размеру массива случайных чисел
+ */
 
+//нужен The Thread Pool. Executor?
+//https://www.codeflow.site/ru/article/thread-pool-java-and-guava
+//https://javarush.ru/quests/lectures/questmultithreading.level08.lecture09
+
+        ExecutorService service = Executors.newFixedThreadPool(amountOfNumbers);
+        FutureTask futureTask = null;
+        for (int i = 0; i < amountOfNumbers; i++) {
+            MyFactorial mf = new MyFactorial(mainList.get(i));
+            service.execute(new FutureTask(mf));
+//            futureTask = service.submit(new FutureTask(mf));
+//            Thread thread = new Thread(futureTask);
+//            thread.start();
+//            System.out.println(futureTask.get());
+        }
+        for (int i = 0; i < amountOfNumbers; i++) {
+            System.out.println(futureTask.get());
+        }
+//        for (int i = 0; i < amountOfNumbers; i++) {
+//            MyFactorial mf = new MyFactorial(mainList.get(i));
+//            FutureTask futureTask = new FutureTask(mf);
+//            Thread thread = new Thread(futureTask);
+//            thread.start();
+//            System.out.println(futureTask.get());
+//        }
+        System.out.println("----------");
+        System.out.println("Отработало за " + (System.currentTimeMillis() - startTimer) + " миллисекунд");
+        service.shutdown();
+    }
+}
+class MyFactorial implements Callable<BigInteger> {
+    private int number;
+
+    public MyFactorial (int number) {
+        this.number = number;
+    }
+
+    @Override
+    public BigInteger call() {
+        BigInteger total = new BigInteger(String.valueOf(1));
+        for (int i = 1; i <= number; i++) {
+            total = total.multiply(BigInteger.valueOf(i));
+        }
+        return total;
     }
 }

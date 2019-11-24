@@ -29,7 +29,7 @@ public class Main {
         long startTimer = System.currentTimeMillis();
         List<Integer> mainList = new ArrayList<>();
         Random rnd = new Random();
-        int amountOfNumbers = 1000;
+        int amountOfNumbers = 10000;
         for (int i = 0; i < amountOfNumbers; i++) {
             mainList.add(rnd.nextInt(100)+1); // от 1 до 10 включительно
         }
@@ -37,11 +37,12 @@ public class Main {
  * создание потоков, количеством, равным размеру массива случайных чисел
  */
 // варинат №1
-        ExecutorService service = Executors.newFixedThreadPool(3);
+        ExecutorService service = Executors.newFixedThreadPool(1000);
         List<MyFactorial> resultList = new ArrayList<>();
         for (int i = 0; i < amountOfNumbers; i++) {
             MyFactorial mf = new MyFactorial(mainList.get(i));
             CompletableFuture<MyFactorial> cf = CompletableFuture.completedFuture(mf);
+//            CompletableFuture.supplyAsync(); // ещё вариант
             resultList.add(cf.get());
         }
         for (MyFactorial el : resultList) {

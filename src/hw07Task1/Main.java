@@ -31,23 +31,35 @@ public class Main {
         Random rnd = new Random();
         int amountOfNumbers = 10000;
         for (int i = 0; i < amountOfNumbers; i++) {
-            mainList.add(rnd.nextInt(100)+1); // от 1 до 10 включительно
+            mainList.add(rnd.nextInt(100)+1); // от 1 до 100 включительно
         }
 /**
  * создание потоков, количеством, равным размеру массива случайных чисел
  */
-// варинат №1
+// варинат №0
         ExecutorService service = Executors.newFixedThreadPool(1000);
         List<MyFactorial> resultList = new ArrayList<>();
         for (int i = 0; i < amountOfNumbers; i++) {
             MyFactorial mf = new MyFactorial(mainList.get(i));
-            CompletableFuture<MyFactorial> cf = CompletableFuture.completedFuture(mf);
+            CompletableFuture<MyFactorial> cf = CompletableFuture.supplyAsync(mf);
 //            CompletableFuture.supplyAsync(); // ещё вариант
             resultList.add(cf.get());
         }
         for (MyFactorial el : resultList) {
             System.out.println(el.call());
         }
+
+// варинат №1
+//        List<MyFactorial> resultList = new ArrayList<>();
+//        for (int i = 0; i < amountOfNumbers; i++) {
+//            MyFactorial mf = new MyFactorial(mainList.get(i));
+//            CompletableFuture<MyFactorial> cf = CompletableFuture.completedFuture(mf);
+////            CompletableFuture.supplyAsync(); // ещё вариант
+//            resultList.add(cf.get());
+//        }
+//        for (MyFactorial el : resultList) {
+//            System.out.println(el.call());
+//        }
 
 // варинат №2
 //        for (int i = 0; i < amountOfNumbers; i++) {

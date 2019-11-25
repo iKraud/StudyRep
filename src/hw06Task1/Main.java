@@ -16,7 +16,7 @@ public class Main{
 // Words.txt в две строки:
 // One two три Три Четыре пЯтЬ
 // Шесть сЕмь eight nInE teN
-        BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream("Words.txt"),  "UTF8"));
+        BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream("C:\\Java\\IdeaProjects\\untitled\\src\\hw06Task1\\Words.txt"),  "UTF8"));
         String s = "";
         while (fis.ready()) {
             s += fis.readLine() + " ";
@@ -38,7 +38,7 @@ public class Main{
             s += el + " ";
         }
         s = s.trim();
-        FileOutputStream fos = new FileOutputStream("WordsFinal.txt");
+        FileOutputStream fos = new FileOutputStream("C:\\Java\\IdeaProjects\\untitled\\src\\hw06Task1\\WordsFinal.txt");
         fos.write(s.getBytes());
         fos.close();
         System.out.println("Выходной набор успешно записан в файл:");

@@ -38,28 +38,27 @@ public class Main {
  */
 // варинат №0
         ExecutorService service = Executors.newFixedThreadPool(1000);
-        List<MyFactorial> resultList = new ArrayList<>();
-        for (int i = 0; i < amountOfNumbers; i++) {
-            MyFactorial mf = new MyFactorial(mainList.get(i));
-            CompletableFuture<MyFactorial> cf = CompletableFuture.supplyAsync(mf);
-//            CompletableFuture.supplyAsync(); // ещё вариант
-            resultList.add(cf.get());
-        }
-        for (MyFactorial el : resultList) {
-            System.out.println(el.call());
-        }
-
-// варинат №1
 //        List<MyFactorial> resultList = new ArrayList<>();
 //        for (int i = 0; i < amountOfNumbers; i++) {
 //            MyFactorial mf = new MyFactorial(mainList.get(i));
-//            CompletableFuture<MyFactorial> cf = CompletableFuture.completedFuture(mf);
+//            CompletableFuture<MyFactorial> cf = CompletableFuture.supplyAsync(mf);
 ////            CompletableFuture.supplyAsync(); // ещё вариант
 //            resultList.add(cf.get());
 //        }
 //        for (MyFactorial el : resultList) {
 //            System.out.println(el.call());
 //        }
+
+// варинат №1
+        List<MyFactorial> resultList = new ArrayList<>();
+        for (int i = 0; i < amountOfNumbers; i++) {
+            MyFactorial mf = new MyFactorial(mainList.get(i));
+            CompletableFuture<MyFactorial> cf = CompletableFuture.completedFuture(mf);
+            resultList.add(cf.get());
+        }
+        for (MyFactorial el : resultList) {
+            System.out.println(el.call());
+        }
 
 // варинат №2
 //        for (int i = 0; i < amountOfNumbers; i++) {

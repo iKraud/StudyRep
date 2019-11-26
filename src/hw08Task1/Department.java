@@ -1,9 +1,6 @@
 package hw08Task1;
 
-import java.io.Serializable;
-
-public class Department implements Serializable {
-    private static final long serialVersionUID = 6264470610159095067L;
+public class Department {
     private String name;
     private int id;
 

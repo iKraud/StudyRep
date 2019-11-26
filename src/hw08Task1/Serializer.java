@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Serializer {
-    public void serialize(Object object, String file) throws NoSuchFieldException, IllegalAccessException {
+    public void serialize(Object object, String file) throws IllegalAccessException {
         String info = "";
         Class className = object.getClass();
         info += "class:" + className  + ";";
@@ -19,11 +19,7 @@ public class Serializer {
 
             info += "fieldName:" + fieldName +  ";" + "fieldValue:" + fieldValue + ";";
         }
-//        Field fieldName = object.getClass().getDeclaredField("name");
-//        fieldName.setAccessible(true);
-//        String fieldValue = (String) fieldName.get(object);
-//
-//        info += ";fieldName:" + fieldName + ";fieldValue:" + fieldValue + ";";
+
         try (FileOutputStream fos = new FileOutputStream(file);
              PrintWriter pw = new PrintWriter(fos)) {
             pw.write(info);
@@ -36,74 +32,82 @@ public class Serializer {
     public Object deSerialize(String file) throws IOException, IllegalAccessException {
         Worker worker = new Worker();
         BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
-        String s = "";
+        String fileContent = "";
         while (fis.ready()) {
-            s += fis.readLine();
+            fileContent += fis.readLine();
         }
         fis.close();
-        int searchBigin;
-        int searchEnd;
-        String searchResult;
-        Field fieldToFill = null;
         List<String> parts = new ArrayList<>() {
             {
-                add("class:");
                 add("fieldName:");
                 add("fieldValue:");
             }
         };
-        List<Integer> whereIsClass = new ArrayList<>();
-        int numberOfClass = 0;
-        for (int i = 0; i < (s.length() - "class:".length()); i++) {
-            if (s.substring(i, i + "class:".length()).equals("class:")) {
+        List<Integer> classesInFileContent = new ArrayList<>();
+        for (int i = 0; i < (fileContent.length() - "class:".length()); i++) {
+            if (fileContent.substring(i, i + "class:".length()).equals("class:")) {
                 i += "class:".length();
-                whereIsClass.set(numberOfClass, i);
-                numberOfClass ++;
+                classesInFileContent.add(i);
             }
         }
+        List<Integer> fieldsInClasses = new ArrayList<>();
+        int fieldsCount = 0;
+        for (int i = 0 + "class:".length(); i < (fileContent.length() - "fieldName:".length()); i++) {
+            if (fileContent.substring(i, i + "fieldName:".length()).equals("fieldName:")) {
+                fieldsCount ++;
+            } else if (fileContent.substring(i, i + "class:".length()).equals("class:")) {
+                fieldsInClasses.add(fieldsCount);
+                fieldsCount = 0;
+            }
+        }
+        fieldsInClasses.add(fieldsCount); //для последнего класса в файле
 
-        for (int i = 0; i < parts.size(); i++) {
-            searchBigin = s.indexOf(parts.get(i)) + parts.get(i).length();
-            searchEnd = s.indexOf(";", searchBigin);
-            searchResult = s.substring(searchBigin, searchEnd);
-            switch (i) {
-                case 0: // class
-                   if (worker.getClass().toString().equals(searchResult)) {
-                       System.out.println("класс совпадает");
-                   } else {
-                       System.out.println("Ошибочный класс. Десериализация отменена!");
-                       return null;
-                   }
-                    break;
-                case 1: //fieldName
-                    for (Field el : worker.getClass().getDeclaredFields()) {
-                        if (el.toString().equals(searchResult)) {
-                            fieldToFill = el;
-                            System.out.println("поле найдено");
-                        }
+        String searchResult;
+        int beginNextSearch = 0;
+        for (int n = 0; n < classesInFileContent.size(); n++) {
+            for (int f = 0; f < fieldsInClasses.get(n); f++) {
+                Field fieldToFill = null;
+                for (int i = 0; i < parts.size(); i++) {
+                    searchResult = searchSubString(fileContent, parts.get(i), beginNextSearch);
+                    switch (i) {
+                        case 0: //fieldName
+                            for (Field el : worker.getClass().getDeclaredFields()) {
+                                if (el.toString().equals(searchResult)) {
+                                    fieldToFill = el;
+                                    beginNextSearch += classesInFileContent.get(n) + "class:".length() + searchResult.length() + "fieldName:".length();
+                                    System.out.println("поле найдено");
+                                }
+                            }
+                            break;
+                        case 1: //fieldValue
+                            fieldToFill.setAccessible(true);
+                            if (fieldToFill.getType() == String.class) {
+                                fieldToFill.set(worker, searchResult);
+                            } else if (fieldToFill.getType() == int.class) {
+                                fieldToFill.set(worker, Integer.parseInt(searchResult));
+                            } else if (fieldToFill.getType().isEnum()) {
+                                fieldToFill.set(worker, Enum.valueOf((Class<Enum>) fieldToFill.getType(), searchResult));
+                            }
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected value: " + i);
                     }
-                    break;
-                case 2: //fieldValue
-                    fieldToFill.setAccessible(true);
-                    fieldToFill.set(worker, searchResult);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + i);
+                }
             }
         }
-//        try (FileInputStream fis = new FileInputStream(file);
-//             BufferedInputStream bis = new BufferedInputStream(fis)) {
-//            byte[] info = bis.readAllBytes();
-//            int ch;
-//            while((bis.read())!=-1) {
-//
-//            }
-//
-//            System.out.println("Объект успешно ДЕсериализован!");
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
         return worker;
+    }
+
+    /**
+     * поиск подстроки
+     * @param source источник для поиска
+     * @param subString искомая подстрока
+     */
+    public String searchSubString (String source, String subString, int beginNextSearch) {
+        int searchBigin;
+        int searchEnd;
+        searchBigin = source.indexOf(subString, beginNextSearch) + subString.length();
+        searchEnd = source.indexOf(";", searchBigin);
+        return source.substring(searchBigin, searchEnd);
     }
 }

@@ -1,20 +1,18 @@
 package hw08Task1;
 
-import java.io.Serializable;
-
-public class Worker implements Serializable {
-    private static final long serialVersionUID = -6657542965966980624L;
-
+public class Worker {
     private String name;
     private int floor;
     private Access access;
-    private Department department;
+//    private Department department;
 
-    public Worker (String name, int floor, Access access, Department department) {
+    public Worker () {}
+
+    public Worker (String name, int floor, Access access/*, Department department*/) {
         setName(name);
         setFloor(floor);
         setAccess(access);
-        setDepartment(department);
+//        setDepartment(department);
     }
 
     public String getName() {
@@ -35,12 +33,12 @@ public class Worker implements Serializable {
     public void setAccess(Access access) {
         this.access = access;
     }
-    public Department getDepartment() {
-        return department;
-    }
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
+//    public Department getDepartment() {
+//        return department;
+//    }
+//    public void setDepartment(Department department) {
+//        this.department = department;
+//    }
 
     @Override
     public String toString() {
@@ -48,7 +46,7 @@ public class Worker implements Serializable {
                 "name='" + name + '\'' +
                 ", floor=" + floor +
                 ", access=" + access +
-                ", department=" + department +
+//                ", department=" + department +
                 '}';
     }
 }

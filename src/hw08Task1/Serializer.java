@@ -7,18 +7,7 @@ import java.util.List;
 
 public class Serializer {
     public void serialize(Object object, String file) throws IllegalAccessException {
-        String info = "";
-        Class className = object.getClass();
-        info += "class:" + className  + ";";
-
-        for (Field el : object.getClass().getDeclaredFields()) {
-            Field fieldName = el;
-            el.setAccessible(true);
-            el.getType();
-            String fieldValue = el.get(object).toString();
-
-            info += "fieldName:" + fieldName +  ";" + "fieldValue:" + fieldValue + ";";
-        }
+        String info = getObjectAsString(object);
 
         try (FileOutputStream fos = new FileOutputStream(file);
              PrintWriter pw = new PrintWriter(fos)) {
@@ -29,7 +18,7 @@ public class Serializer {
         }
     }
 
-    public Object deSerialize(String file) throws IOException, IllegalAccessException {
+    public Object deSerialize(String file) throws IOException, IllegalAccessException, ClassNotFoundException {
         Worker worker = new Worker();
         BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
         String fileContent = "";
@@ -52,10 +41,11 @@ public class Serializer {
         }
         List<Integer> fieldsInClasses = new ArrayList<>();
         int fieldsCount = 0;
-        for (int i = 0 + "class:".length(); i < (fileContent.length() - "fieldName:".length()); i++) {
+        for (int i = "class:".length(); i < (fileContent.length() - "fieldName:".length()); i++) {
             if (fileContent.substring(i, i + "fieldName:".length()).equals("fieldName:")) {
                 fieldsCount ++;
-            } else if (fileContent.substring(i, i + "class:".length()).equals("class:")) {
+            } else if
+            (fileContent.substring(i, i + "class:".length()).equals("class:")) {
                 fieldsInClasses.add(fieldsCount);
                 fieldsCount = 0;
             }
@@ -63,19 +53,29 @@ public class Serializer {
         fieldsInClasses.add(fieldsCount); //для последнего класса в файле
 
         String searchResult;
+        Class CurrentClass;
+        String className;
         int beginNextSearch = 0;
         for (int n = 0; n < classesInFileContent.size(); n++) {
+            searchResult = searchSubString(fileContent, "class:", beginNextSearch);
+            className = searchResult.substring(searchResult.lastIndexOf(" ") + 1);
+            CurrentClass = Class.forName(className);
+            //тут возможно нужно создать текущий объект.....ссылка на тот же объект, но под другим углом??
+            beginNextSearch += "class:".length() + (searchResult + ";").length();
+            System.out.println("класс создан: " + searchResult);
             for (int f = 0; f < fieldsInClasses.get(n); f++) {
                 Field fieldToFill = null;
                 for (int i = 0; i < parts.size(); i++) {
                     searchResult = searchSubString(fileContent, parts.get(i), beginNextSearch);
+                    beginNextSearch += parts.get(i).length();
                     switch (i) {
                         case 0: //fieldName
-                            for (Field el : worker.getClass().getDeclaredFields()) {
+                            for (Field el : CurrentClass.getDeclaredFields()) {
                                 if (el.toString().equals(searchResult)) {
                                     fieldToFill = el;
-                                    beginNextSearch += classesInFileContent.get(n) + "class:".length() + searchResult.length() + "fieldName:".length();
-                                    System.out.println("поле найдено");
+                                    beginNextSearch += (searchResult + ";").length();
+                                    System.out.println("поле найдено: " + searchResult);
+                                    break;
                                 }
                             }
                             break;
@@ -88,6 +88,8 @@ public class Serializer {
                             } else if (fieldToFill.getType().isEnum()) {
                                 fieldToFill.set(worker, Enum.valueOf((Class<Enum>) fieldToFill.getType(), searchResult));
                             }
+                            beginNextSearch += (searchResult + ";").length();
+                            System.out.println("значение записано: " + searchResult);
                             break;
                         default:
                             throw new IllegalStateException("Unexpected value: " + i);
@@ -109,5 +111,27 @@ public class Serializer {
         searchBigin = source.indexOf(subString, beginNextSearch) + subString.length();
         searchEnd = source.indexOf(";", searchBigin);
         return source.substring(searchBigin, searchEnd);
+    }
+
+    /**
+     *
+     * @param object объект для обращения в строку
+     * @return объект, разбитый по полям и значения
+     * @throws IllegalAccessException
+     */
+    public String getObjectAsString (Object object) throws IllegalAccessException {
+        String info = "class:" + object.getClass() + ";";
+        for (Field el : object.getClass().getDeclaredFields()) {
+            Field fieldName = el;
+            el.setAccessible(true);
+            if (!el.getType().isPrimitive() &&
+                    (!el.getType().equals(String.class)) &&
+                    (!el.getType().isEnum())) {
+                info += getObjectAsString(el.get(object));
+                return info;
+            }
+            info += "fieldName:" + fieldName +  ";" + "fieldValue:" + el.get(object).toString() + ";";
+        }
+        return info;
     }
 }

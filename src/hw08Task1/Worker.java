@@ -4,15 +4,15 @@ public class Worker {
     private String name;
     private int floor;
     private Access access;
-//    private Department department;
+    private Department department;
 
     public Worker () {}
 
-    public Worker (String name, int floor, Access access/*, Department department*/) {
+    public Worker (String name, int floor, Access access, Department department) {
         setName(name);
         setFloor(floor);
         setAccess(access);
-//        setDepartment(department);
+        setDepartment(department);
     }
 
     public String getName() {
@@ -33,12 +33,12 @@ public class Worker {
     public void setAccess(Access access) {
         this.access = access;
     }
-//    public Department getDepartment() {
-//        return department;
-//    }
-//    public void setDepartment(Department department) {
-//        this.department = department;
-//    }
+    public Department getDepartment() {
+        return department;
+    }
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
 
     @Override
     public String toString() {
@@ -46,7 +46,7 @@ public class Worker {
                 "name='" + name + '\'' +
                 ", floor=" + floor +
                 ", access=" + access +
-//                ", department=" + department +
+                ", department=" + department +
                 '}';
     }
 }

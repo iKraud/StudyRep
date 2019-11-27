@@ -15,11 +15,11 @@ import java.io.IOException;
  * Требование: Использовать готовые реализации (Jaxb, jackson и т.д.) запрещается.
  */
 public class Main {
-    public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, IOException {
-//        String path = "R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw08Task1\\Text.txt";
-        String path = "C:\\Java\\IdeaProjects\\untitled\\src\\hw08Task1\\Text.txt";
+    public static void main(String[] args) throws IllegalAccessException, IOException, ClassNotFoundException {
+        String path = "R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw08Task1\\Text.txt";
+//        String path = "C:\\Java\\IdeaProjects\\untitled\\src\\hw08Task1\\Text.txt";
         Department department = new Department("NYPD",1);
-        Worker worker1 = new Worker("Adam", 17, Access.ACTIVE/*, department*/);
+        Worker worker1 = new Worker("Adam", 17, Access.ACTIVE, department);
         Serializer serializer = new Serializer();
         serializer.serialize(worker1, path);
         Worker worker2 = (Worker) serializer.deSerialize(path);

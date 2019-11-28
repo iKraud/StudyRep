@@ -1,6 +1,7 @@
 package hw08Task1;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Задание 1. Необходимо разработать класс, реализующий следующие методы:
@@ -15,7 +16,7 @@ import java.io.IOException;
  * Требование: Использовать готовые реализации (Jaxb, jackson и т.д.) запрещается.
  */
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException, IOException, ClassNotFoundException {
+    public static void main(String[] args) throws IllegalAccessException, IOException, ClassNotFoundException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String path = "R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw08Task1\\Text.txt";
 //        String path = "C:\\Java\\IdeaProjects\\untitled\\src\\hw08Task1\\Text.txt";
         Department department = new Department("NYPD",1);

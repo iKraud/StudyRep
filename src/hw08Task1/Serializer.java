@@ -2,6 +2,7 @@ package hw08Task1;
 
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 
 public class Serializer {
     /**
@@ -31,7 +32,7 @@ public class Serializer {
      * @throws ClassNotFoundException
      * @throws InstantiationException
      */
-    public Object deSerialize(String file) throws IOException, IllegalAccessException, ClassNotFoundException, InstantiationException {
+    public Object deSerialize(String file) throws IOException, IllegalAccessException, ClassNotFoundException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
         String fileContent = "";
         while (fis.ready()) {
@@ -92,7 +93,7 @@ public class Serializer {
      * @throws IllegalAccessException
      * @throws InstantiationException
      */
-    public Object getObjectFromString (String fileContent, int beginNextSearch) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    public Object getObjectFromString (String fileContent, int beginNextSearch) throws ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String searchResult;
         String className;
         Object subObject;
@@ -101,16 +102,16 @@ public class Serializer {
 
         className = searchResult.substring(searchResult.lastIndexOf(" ") + 1);
         Class CurrentClass = Class.forName(className);
-        Object object = CurrentClass.newInstance();
+        Object object = CurrentClass.getDeclaredConstructor().newInstance(); //сначала создаём объект нового класса
 
-        for (Field fd : object.getClass().getDeclaredFields()) {
+        for (Field fd : object.getClass().getDeclaredFields()) { //перебираем поля
             searchResult = searchSubString(fileContent, "fieldName:", beginNextSearch);
             beginNextSearch += ("fieldName:").length() + ((searchResult + ";").length());
-            if (fileContent.substring(beginNextSearch, beginNextSearch + "class:".length()).equals("class:")) {
-                subObject = getObjectFromString(fileContent, beginNextSearch);
+            if (fileContent.substring(beginNextSearch, beginNextSearch + "class:".length()).equals("class:")) { //если после имени поля идёт класс
+                subObject = getObjectFromString(fileContent, beginNextSearch); //значит рекурсия
                 fd.setAccessible(true);
                 fd.set(object, subObject);
-            } else {
+            } else { //записываем значение
                 searchResult = searchSubString(fileContent, "fieldValue:", beginNextSearch);
                 beginNextSearch += ("fieldValue:").length() + ((searchResult + ";").length());
                 fd.setAccessible(true);

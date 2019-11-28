@@ -2,15 +2,19 @@ package hw08Task1;
 
 import java.io.*;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Serializer {
+    /**
+     * упаковывает объект в файл
+     * @param object объект для упаковки
+     * @param file путь к файлу, в который будем упаковывать
+     * @throws IllegalAccessException
+     */
     public void serialize(Object object, String file) throws IllegalAccessException {
-        String info = getObjectAsString(object);
+        String info = getStringFromObject(object);
 
         try (FileOutputStream fos = new FileOutputStream(file);
-             PrintWriter pw = new PrintWriter(fos)) {
+            PrintWriter pw = new PrintWriter(fos)) {
             pw.write(info);
             System.out.println("Объект успешно сериализован!");
         } catch (IOException e) {
@@ -18,86 +22,27 @@ public class Serializer {
         }
     }
 
-    public Object deSerialize(String file) throws IOException, IllegalAccessException, ClassNotFoundException {
-        Worker worker = new Worker();
+    /**
+     * извлекает объект из файла
+     * @param file путь к файлу, из которого будем извлекать объект
+     * @return
+     * @throws IOException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     */
+    public Object deSerialize(String file) throws IOException, IllegalAccessException, ClassNotFoundException, InstantiationException {
         BufferedReader fis = new BufferedReader(new InputStreamReader(new FileInputStream(file),"UTF8"));
         String fileContent = "";
         while (fis.ready()) {
             fileContent += fis.readLine();
         }
         fis.close();
-        List<String> parts = new ArrayList<>() {
-            {
-                add("fieldName:");
-                add("fieldValue:");
-            }
-        };
-        List<Integer> classesInFileContent = new ArrayList<>();
-        for (int i = 0; i < (fileContent.length() - "class:".length()); i++) {
-            if (fileContent.substring(i, i + "class:".length()).equals("class:")) {
-                i += "class:".length();
-                classesInFileContent.add(i);
-            }
-        }
-        List<Integer> fieldsInClasses = new ArrayList<>();
-        int fieldsCount = 0;
-        for (int i = "class:".length(); i < (fileContent.length() - "fieldName:".length()); i++) {
-            if (fileContent.substring(i, i + "fieldName:".length()).equals("fieldName:")) {
-                fieldsCount ++;
-            } else if
-            (fileContent.substring(i, i + "class:".length()).equals("class:")) {
-                fieldsInClasses.add(fieldsCount);
-                fieldsCount = 0;
-            }
-        }
-        fieldsInClasses.add(fieldsCount); //для последнего класса в файле
 
-        String searchResult;
-        Class CurrentClass;
-        String className;
         int beginNextSearch = 0;
-        for (int n = 0; n < classesInFileContent.size(); n++) {
-            searchResult = searchSubString(fileContent, "class:", beginNextSearch);
-            className = searchResult.substring(searchResult.lastIndexOf(" ") + 1);
-            CurrentClass = Class.forName(className);
-            //тут возможно нужно создать текущий объект.....ссылка на тот же объект, но под другим углом??
-            beginNextSearch += "class:".length() + (searchResult + ";").length();
-            System.out.println("класс создан: " + searchResult);
-            for (int f = 0; f < fieldsInClasses.get(n); f++) {
-                Field fieldToFill = null;
-                for (int i = 0; i < parts.size(); i++) {
-                    searchResult = searchSubString(fileContent, parts.get(i), beginNextSearch);
-                    beginNextSearch += parts.get(i).length();
-                    switch (i) {
-                        case 0: //fieldName
-                            for (Field el : CurrentClass.getDeclaredFields()) {
-                                if (el.toString().equals(searchResult)) {
-                                    fieldToFill = el;
-                                    beginNextSearch += (searchResult + ";").length();
-                                    System.out.println("поле найдено: " + searchResult);
-                                    break;
-                                }
-                            }
-                            break;
-                        case 1: //fieldValue
-                            fieldToFill.setAccessible(true);
-                            if (fieldToFill.getType() == String.class) {
-                                fieldToFill.set(worker, searchResult);
-                            } else if (fieldToFill.getType() == int.class) {
-                                fieldToFill.set(worker, Integer.parseInt(searchResult));
-                            } else if (fieldToFill.getType().isEnum()) {
-                                fieldToFill.set(worker, Enum.valueOf((Class<Enum>) fieldToFill.getType(), searchResult));
-                            }
-                            beginNextSearch += (searchResult + ";").length();
-                            System.out.println("значение записано: " + searchResult);
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected value: " + i);
-                    }
-                }
-            }
-        }
-        return worker;
+        Object object = getObjectFromString(fileContent, beginNextSearch);
+        System.out.println("Объект успешно ДЕсериализован!");
+        return object;
     }
 
     /**
@@ -114,24 +59,70 @@ public class Serializer {
     }
 
     /**
-     *
+     * обращение объекта в строку
      * @param object объект для обращения в строку
-     * @return объект, разбитый по полям и значения
+     * @return строку, представляющую собой объект, разбитый по полям и значения
      * @throws IllegalAccessException
      */
-    public String getObjectAsString (Object object) throws IllegalAccessException {
-        String info = "class:" + object.getClass() + ";";
+    public String getStringFromObject (Object object) throws IllegalAccessException {
+        Object currentObject = object;
+        String info = "class:" + object.getClass() + ";"; //сначала записываем название нового класса
         for (Field el : object.getClass().getDeclaredFields()) {
             Field fieldName = el;
             el.setAccessible(true);
+            info += "fieldName:" + fieldName +  ";"; //перебираем поля
             if (!el.getType().isPrimitive() &&
                     (!el.getType().equals(String.class)) &&
                     (!el.getType().isEnum())) {
-                info += getObjectAsString(el.get(object));
-                return info;
+                el.setAccessible(true);
+                currentObject = el.get(currentObject);
+                info += getStringFromObject(currentObject); //если поле это объект, то рекурсия
             }
-            info += "fieldName:" + fieldName +  ";" + "fieldValue:" + el.get(object).toString() + ";";
+            info += "fieldValue:" + el.get(object).toString() + ";"; //заполняем значения полей
         }
         return info;
+    }
+
+    /**
+     * получение объекта из строки
+     * @param fileContent
+     * @param beginNextSearch
+     * @return объект полученный из файла в виде строки
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public Object getObjectFromString (String fileContent, int beginNextSearch) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+        String searchResult;
+        String className;
+        Object subObject;
+        searchResult = searchSubString(fileContent, "class:", beginNextSearch);
+        beginNextSearch += "class:".length() + (searchResult + ";").length();
+
+        className = searchResult.substring(searchResult.lastIndexOf(" ") + 1);
+        Class CurrentClass = Class.forName(className);
+        Object object = CurrentClass.newInstance();
+
+        for (Field fd : object.getClass().getDeclaredFields()) {
+            searchResult = searchSubString(fileContent, "fieldName:", beginNextSearch);
+            beginNextSearch += ("fieldName:").length() + ((searchResult + ";").length());
+            if (fileContent.substring(beginNextSearch, beginNextSearch + "class:".length()).equals("class:")) {
+                subObject = getObjectFromString(fileContent, beginNextSearch);
+                fd.setAccessible(true);
+                fd.set(object, subObject);
+            } else {
+                searchResult = searchSubString(fileContent, "fieldValue:", beginNextSearch);
+                beginNextSearch += ("fieldValue:").length() + ((searchResult + ";").length());
+                fd.setAccessible(true);
+                if (fd.getType() == String.class) {
+                    fd.set(object, searchResult);
+                } else if (fd.getType() == int.class) {
+                    fd.set(object, Integer.parseInt(searchResult));
+                } else if (fd.getType().isEnum()) {
+                    fd.set(object, Enum.valueOf((Class<Enum>) fd.getType(), searchResult));
+                }
+            }
+        }
+        return object;
     }
 }

@@ -29,6 +29,7 @@ public class Main {
             currentString = in.readLine();
             s += currentString + "\n";
         }
+        in.close();
         s = s.substring(0, s.length()-("\n\n").length());
 
 //        FileOutputStream fos = new FileOutputStream("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\SomeClass.java");

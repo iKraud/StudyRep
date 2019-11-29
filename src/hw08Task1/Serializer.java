@@ -15,7 +15,7 @@ public class Serializer {
         String info = getStringFromObject(object);
 
         try (FileOutputStream fos = new FileOutputStream(file);
-            PrintWriter pw = new PrintWriter(fos)) {
+             PrintWriter pw = new PrintWriter(fos)) {
             pw.write(info);
             System.out.println("Объект успешно сериализован!");
         } catch (IOException e) {

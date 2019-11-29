@@ -16,9 +16,9 @@ import java.lang.reflect.InvocationTargetException;
  * Требование: Использовать готовые реализации (Jaxb, jackson и т.д.) запрещается.
  */
 public class Main {
-    public static void main(String[] args) throws IllegalAccessException, IOException, ClassNotFoundException, InstantiationException, NoSuchMethodException, InvocationTargetException {
-        String path = "R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw08Task1\\Text.txt";
-//        String path = "C:\\Java\\IdeaProjects\\untitled\\src\\hw08Task1\\Text.txt";
+    public static void main(String[] args) throws IllegalAccessException, IOException, ClassNotFoundException, NoSuchMethodException, InvocationTargetException, InstantiationException {
+//        String path = "R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw08Task1\\Text.txt";
+        String path = "C:\\Java\\IdeaProjects\\untitled\\src\\hw08Task1\\Text.txt";
         Department department = new Department("NYPD",1);
         Worker worker1 = new Worker("Adam", 17, Access.ACTIVE, department);
         Serializer serializer = new Serializer();

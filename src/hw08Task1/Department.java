@@ -4,6 +4,8 @@ public class Department {
     private String name;
     private int id;
 
+    public Department () {}
+
     public Department(String name, int id) {
         setName(name);
         setId(id);

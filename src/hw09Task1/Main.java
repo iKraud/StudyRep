@@ -37,9 +37,3 @@ public class Main {
         System.out.println("Файл класса успешно создан!");
     }
 }
-
-package hw09Task1;
-
-public interface Worker {
-    void doWork();
-}

@@ -23,11 +23,9 @@ import java.io.InputStreamReader;
 public class Main {
     public static void main(String[] args) throws IOException {
         String s = "";
-        BufferedReader in = new BufferedReader(new InputStreamReader(System.in)); // для чтения консоли
-        String currentString = "";
+        BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         while (!s.endsWith("\n\n")) {
-            currentString = in.readLine();
-            s += currentString + "\n";
+            s += in.readLine() + "\n";
         }
         in.close();
         s = s.substring(0, s.length()-("\n\n").length());

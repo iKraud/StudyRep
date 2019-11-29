@@ -1,9 +1,9 @@
 package hw09Task1;
 
-import java.io.BufferedReader;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Дан интерфейс
@@ -21,19 +21,39 @@ import java.io.InputStreamReader;
  * Метод, введенный с консоли, исполняется в рантайме (вызывается у экземпляра объекта подгруженного класса)
  */
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException, NoSuchMethodException, InvocationTargetException {
         String s = "";
+        Helpers rt = new Helpers();
         BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
         while (!s.endsWith("\n\n")) {
             s += in.readLine() + "\n";
         }
         in.close();
-        s = s.substring(0, s.length()-("\n\n").length());
+        s = s.substring(0, s.length() - ("\n\n").length());
 
-//        FileOutputStream fos = new FileOutputStream("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\SomeClass.java");
-        FileOutputStream fos = new FileOutputStream("R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw09Task1\\SomeClass.java");
+        rt.setStartTime();
+        FileOutputStream fos = new FileOutputStream("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.java");
+//        FileOutputStream fos = new FileOutputStream("R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw09Task1\\SomeClass.java");
         fos.write(s.getBytes());
         fos.close();
-        System.out.println("Файл класса успешно создан!");
+        System.out.println("Класс создан за " + rt.getRunTime() + " миллисекунд");
+
+        File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.java");
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
+        compiler.run(null, null, null, sourceFile.getPath());
+
+        ClassLoader classLoader = new MyClassLoader();
+        Class<?> cls = Class.forName("SomeClass", true, classLoader); // Should print "hello".
+
+        Object instance = cls.getDeclaredConstructor().newInstance(); // Should print "world".
+        instance.getClass().getDeclaredMethod("doWork");
+
+//        useCustomClassLoader();
     }
+//    private static void useCustomClassLoader () throws ClassNotFoundException {
+//        ClassLoader cl = new MyClassLoader();
+//        Class<?> someClass = cl.loadClass("SomeClass");
+//
+//        System.out.println(cl.getClass());
+//    }
 }

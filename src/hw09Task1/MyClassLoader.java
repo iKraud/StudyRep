@@ -7,12 +7,15 @@ import java.nio.file.Paths;
 public class MyClassLoader extends ClassLoader {
     @Override
     public Class<?> loadClass(String name) throws ClassNotFoundException {
-        return findClass(name);
+        if ("hw09Task1.SomeClass".equals(name)) {
+            return findClass(name);
+        }
+        return super.loadClass(name);
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-        if ("SomeClass".equals(name)) {
+        if ("hw09Task1.SomeClass".equals(name)) {
             try {
 //                byte[] bytes = Files.readAllBytes(Paths.get("C:\\Java\\IdeaProjects\\untitled\\out\\production\\StudyInnopolis\\hw09Task1\\SomeClass.class"));
                 byte[] bytes = Files.readAllBytes(Paths.get("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.class"));

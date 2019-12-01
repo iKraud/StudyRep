@@ -43,17 +43,11 @@ public class Main {
         compiler.run(null, null, null, sourceFile.getPath());
 
         ClassLoader classLoader = new MyClassLoader();
-        Class<?> cls = Class.forName("SomeClass", true, classLoader); // Should print "hello".
 
-        Object instance = cls.getDeclaredConstructor().newInstance(); // Should print "world".
-        instance.getClass().getDeclaredMethod("doWork");
-
-//        useCustomClassLoader();
+        Class<?> cls = Class.forName("hw09Task1.SomeClass", true, classLoader);
+        Object instance = cls.getDeclaredConstructor().newInstance();
+        instance.getClass().getDeclaredMethod("doWork").invoke(instance); //оставил несколько вариантов вызова для себя
+        cls.getMethod("doWork").invoke(instance); //оставил несколько вариантов вызова для себя
+        cls.getMethod("doWork").invoke(cls.getDeclaredConstructor().newInstance()); //оставил несколько вариантов вызова для себя
     }
-//    private static void useCustomClassLoader () throws ClassNotFoundException {
-//        ClassLoader cl = new MyClassLoader();
-//        Class<?> someClass = cl.loadClass("SomeClass");
-//
-//        System.out.println(cl.getClass());
-//    }
 }

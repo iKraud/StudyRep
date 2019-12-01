@@ -38,16 +38,15 @@ public class Main {
         fos.close();
         System.out.println("Класс создан за " + rt.getRunTime() + " миллисекунд");
 
-        File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.java");
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
-        compiler.run(null, null, null, sourceFile.getPath());
+        File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.java"); //компиляция на ходу
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler(); //компиляция на ходу
+        compiler.run(null, null, null, sourceFile.getPath()); //компиляция на ходу
 
         ClassLoader classLoader = new MyClassLoader();
 
-        Class<?> cls = Class.forName("hw09Task1.SomeClass", true, classLoader);
+        Class<?> cls = Class.forName("hw09Task1.SomeClass", true, classLoader); //вопрос для понимания: зачем тут дженерик?
         Object instance = cls.getDeclaredConstructor().newInstance();
         instance.getClass().getDeclaredMethod("doWork").invoke(instance); //оставил несколько вариантов вызова для себя
-        cls.getMethod("doWork").invoke(instance); //оставил несколько вариантов вызова для себя
         cls.getMethod("doWork").invoke(cls.getDeclaredConstructor().newInstance()); //оставил несколько вариантов вызова для себя
     }
 }

@@ -39,7 +39,7 @@ public class Main {
         System.out.println("Класс создан за " + rt.getRunTime() + " миллисекунд");
 
         File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw09Task1\\SomeClass.java"); //компиляция на ходу
-        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler(); //компиляция на ходу
+        JavaCompiler compiler = ToolProvider.getSystemJavaCompiler(); //компиляция на ходу - можно было использовать javac
         compiler.run(null, null, null, sourceFile.getPath()); //компиляция на ходу
 
         ClassLoader classLoader = new MyClassLoader();

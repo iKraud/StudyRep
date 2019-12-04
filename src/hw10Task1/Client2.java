@@ -6,14 +6,16 @@ import java.io.InputStreamReader;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.MulticastSocket;
 
 public class Client2 {
-    public static final Integer CLIENT_PORT = 7002;
-    public static String clientAddress = "127.0.0.1";  //"230.0.0.0"
+    public static final Integer CLIENT_DG_PORT = 7021;
+    public static final Integer CLIENT_MC_PORT = 7022;
+    public static String clientAddress = "127.0.0.1";  //"230.0.0.0" //"127.0.0.1"
     public static void main(String args[]) throws IOException {
         DatagramSocket datagramSocket;
-//        MulticastSocket multicastSocket;
-//        InetAddress group = InetAddress.getByName("127.0.0.1");
+        MulticastSocket multicastSocket;
+        InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
 
         String incomingMessage;
         String outcomingMessage;
@@ -26,9 +28,10 @@ public class Client2 {
         myName = "[" + br.readLine() + "]";
         byte[] b = myName.getBytes();
 
-        datagramSocket = new DatagramSocket(CLIENT_PORT);
-//        multicastSocket.joinGroup(group);
-        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(myAddress), Server.SERVER_DG_PORT);
+        datagramSocket = new DatagramSocket(CLIENT_DG_PORT);
+        multicastSocket = new MulticastSocket(CLIENT_MC_PORT);
+
+        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(myAddress), Server.SERVER_DG_PORT); //InetAddress.getByName(myAddress)
         datagramSocket.send(dp);
 
         byte[] buffer = new byte[65536];
@@ -39,7 +42,6 @@ public class Client2 {
         System.out.println(incomingMessage);
 
         try {
-//            datagramSocket = new DatagramSocket(CLIENT_PORT);
             while (true) {
                 outcomingMessage = br.readLine();
                 b = outcomingMessage.getBytes();
@@ -50,14 +52,16 @@ public class Client2 {
                 buffer = new byte[65536];
                 reply = new DatagramPacket(buffer, buffer.length);
 
-                datagramSocket.receive(reply);
+//                multicastSocket = new MulticastSocket(CLIENT1_MC_PORT);
+                multicastSocket.joinGroup(group);
+                multicastSocket.receive(reply);
                 data = reply.getData();
                 incomingMessage = new String(data, 0, reply.getLength());
                 System.out.println(incomingMessage);
 
                 if (outcomingMessage.equals("quit")) {
-//                    multicastSocket.leaveGroup(group);
-//                    multicastSocket.close();
+                    multicastSocket.leaveGroup(group);
+                    multicastSocket.close();
                     break;
                 }
             }

@@ -27,8 +27,6 @@ public class Server {
             MulticastSocket multicastSocket = new MulticastSocket(SERVER_MC_PORT);
 
             datagramSocket.setBroadcast(true);
-//            InetAddress group = InetAddress.getByName("127.0.0.10");
-//            multicastSocket.joinGroup(group);
 
             byte[] buffer = new byte[65536];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);

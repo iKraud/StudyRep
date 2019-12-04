@@ -1,10 +1,9 @@
-package hw10Task1;
+package hw10Task3;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.MulticastSocket;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,39 +17,35 @@ import java.util.Map;
  * b. добавить возможность выхода из чата с помощью написанной в чате команды «quit»
  */
 public class Server {
-    public static final Integer SERVER_DG_PORT = 7000;
-    public static final Integer SERVER_MC_PORT = 7001;
-    public static void main(String args[]) {
+    public static final Integer SERVER_PORT = 7000;
+    public static void main (String args[]) {
         Map<String,String> users = new HashMap<>();
         try {
-            DatagramSocket datagramSocket = new DatagramSocket(SERVER_DG_PORT);
-            MulticastSocket multicastSocket = new MulticastSocket(SERVER_MC_PORT);
-
-            datagramSocket.setBroadcast(true);
+            DatagramSocket datagramSocket = new DatagramSocket(SERVER_PORT);
+//            datagramSocket.setBroadcast(true);
+//            InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
 
             byte[] buffer = new byte[65536];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
             System.out.println("Сервер готов. Ожидается подключение участников...");
-            while(true) {
+            while (true) {
                 datagramSocket.receive(incoming);
-                byte[] data = incoming.getData();
-                String s = new String(data, 0, incoming.getLength());
+                String s = new String(incoming.getData(), 0, incoming.getLength());
 
                 if (s.startsWith("[")) {
                     String newComer = s.substring(s.lastIndexOf("[") + 1, s.lastIndexOf("]"));
-                    System.out.println("Приветствуем нового участника: " + newComer);
+                    s = "Приветствуем нового участника: " + newComer;
+                    System.out.println(s);
                     users.put(String.valueOf(incoming.getPort()), newComer);
-
-                    s = "Добро пожаловать в чат, " + newComer + "!";
-//                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort());
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort()); //group
+                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort()); //InetAddress.getByName("255.255.255.255")
+                    datagramSocket.setBroadcast(true);
                     datagramSocket.send(dp);
                 } else if (!s.toLowerCase().equals("quit")) {
                     s = users.get(String.valueOf(incoming.getPort()))  + " написал: " + s;
                     System.out.println(s);
-
                     DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort()); //incoming.getPort()
-                    multicastSocket.send(dp);
+                    datagramSocket.setBroadcast(true);
+                    datagramSocket.send(dp);
                 } else {
                     s = "Вы вышли из чата. До новых встреч!";
                     DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort());
@@ -59,10 +54,8 @@ public class Server {
                     users.remove(String.valueOf(incoming.getPort()));
                 }
             }
-//            multicastSocket.leaveGroup(group);
-//            multicastSocket.close();
         }
-        catch(IOException e) {
+        catch (IOException e) {
             System.err.println("IOException " + e);
         }
     }

@@ -15,7 +15,7 @@ public class Client1 {
     public static void main(String args[]) throws IOException {
         DatagramSocket datagramSocket;
         MulticastSocket multicastSocket;
-        InetAddress group = InetAddress.getByName("230.0.0.0");
+        InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
 
         String incomingMessage;
         String outcomingMessage;
@@ -31,7 +31,7 @@ public class Client1 {
         datagramSocket = new DatagramSocket(CLIENT_DG_PORT);
         multicastSocket = new MulticastSocket(CLIENT_MC_PORT);
 
-        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(myAddress), Server.SERVER_DG_PORT);
+        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(myAddress), Server.SERVER_DG_PORT); //InetAddress.getByName(myAddress)
         datagramSocket.send(dp);
 
         byte[] buffer = new byte[65536];

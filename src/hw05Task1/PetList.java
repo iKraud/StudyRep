@@ -2,9 +2,9 @@ package hw05Task1;
 
 import java.util.*;
 
-public class PetList {
-    static int count = 0;
-    Map<Integer, Animal> petMap = new HashMap<>();
+class PetList {
+    private static int count = 0;
+    private Map<Integer, Animal> petMap = new HashMap<>();
 
     public void addPet (Animal animal) throws DuplicatePetException {
         if (petMap.containsValue(animal)) {
@@ -16,7 +16,7 @@ public class PetList {
         System.out.println("Ищем питомца по кличке: " + nickName);
         int total = 0;
         for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
-            if (el.getValue().getNickname() == nickName) {
+            if (el.getValue().getNickname().equals(nickName)) {
                 total++;
                 System.out.println(el.getValue());
             }

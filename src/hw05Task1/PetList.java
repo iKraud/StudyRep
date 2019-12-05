@@ -16,7 +16,7 @@ class PetList {
         System.out.println("Ищем питомца по кличке: " + nickName);
         int total = 0;
         for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
-            if (el.getValue().getNickname().equals(nickName)) {
+            if (el.getValue().getNickname().equalsIgnoreCase(nickName)) {
                 total++;
                 System.out.println(el.getValue());
             }

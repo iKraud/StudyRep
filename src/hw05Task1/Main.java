@@ -34,7 +34,7 @@ public class Main {
         petList.addPet(animal4);
         petList.addPet(animal5);
 //        petList.addPet(animal6); // для проверки исключения дублей
-        petList.findPetByNickName("Fluffy"); //поиск питомца
+        petList.findPetByNickName("fluffy"); //поиск питомца
         System.out.println();
 
 //редактирование питомца

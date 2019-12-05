@@ -3,24 +3,14 @@ package hw05Task1;
 import java.util.Objects;
 
 class Animal {
-    static int count = 0;
-    private int id = 0;
     private String nickname;
     private Person owner;
     private double weight;
 
     public Animal (String nickname, Person owner, double weight) {
-       count += 1;
-       setId();
-       setNickname(nickname);
-       setOwner(owner);
-       setWeight(weight);
-    }
-    public void setId() {
-        this.id = count;
-    }
-    public int getId () {
-        return id;
+        setNickname(nickname);
+        setOwner(owner);
+        setWeight(weight);
     }
     public void setNickname (String nickname) {
         if (!nickname.equals("")) {

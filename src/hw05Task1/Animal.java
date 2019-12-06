@@ -1,6 +1,7 @@
 package hw05Task1;
 
 import java.util.Objects;
+import java.util.function.Predicate;
 
 class Animal {
     private String nickname;
@@ -13,7 +14,8 @@ class Animal {
         setWeight(weight);
     }
     public void setNickname (String nickname) {
-        if (!nickname.equals("")) {
+        Predicate<String> isEmpty = s -> s.equals("");
+        if (isEmpty.negate().test(nickname)) { // было if (!nickname.equals(""))
             this.nickname = nickname;
         } else {
             this.nickname = "Клички пока нет";

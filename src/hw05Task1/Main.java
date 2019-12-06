@@ -19,13 +19,12 @@ public class Main {
         Person owner2 = new Person ("Briana",22,1);
         Person owner3 = new Person ("Clair",23,1);
 
-        Animal animal1 = new Animal ("Richard",owner1,11.1);
-        Animal animal2 = new Animal ("Kitty",owner2,22.2);
-        Animal animal3 = new Animal ("Fluffy",owner2,44.44);
-        Animal animal4 = new Animal ("Kitty",owner2,55.55);
-        Animal animal5 = new Animal ("Fluffy",owner3,33.3);
-
-        Animal animal6 = new Animal ("Kitty",owner2,22.2); // для проверки исключения дублей
+        Animal animal1 = new Animal ("Richard", owner1,11.1);
+        Animal animal2 = new Animal ("Kitty", owner2,22.2);
+        Animal animal3 = new Animal ("Fluffy", owner2,44.44);
+        Animal animal4 = new Animal ("", owner2,22.1); //55.55 //Kitty
+        Animal animal5 = new Animal ("Fluffy", owner3,33.3);
+        Animal animal6 = new Animal ("Kitty", owner2,22.2); // для проверки исключения дублей
 
         PetList petList = new PetList();
         petList.addPet(animal1);

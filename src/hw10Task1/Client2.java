@@ -1,4 +1,4 @@
-package hw10Task3;
+package hw10Task1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,6 +53,7 @@ public class Client2 {
                 System.out.println(incomingMessage);
 
                 if (outcomingMessage.equals("quit")) {
+                    datagramSocket.close();
                     break;
                 }
             }

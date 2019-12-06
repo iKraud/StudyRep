@@ -1,6 +1,7 @@
 package hw15Task1;
 
 /**
+ * @author "Timohin Igor"
  * 1)    Спроектировать базу
  *
  * - Таблица USER содержит поля id, name, birthday, login_ID, city, email, description

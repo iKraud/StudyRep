@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * @author "Timohin Igor"
  * Задание 1. Необходимо разработать класс, реализующий следующие методы:
  * void serialize (Object object, String file);
  * Object deSerialize(String file);

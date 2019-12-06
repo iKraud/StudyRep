@@ -6,6 +6,7 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 
 /**
+ * @author "Timohin Igor"
  * Дан интерфейс
  *
  * public interface Worker {

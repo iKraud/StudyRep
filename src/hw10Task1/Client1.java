@@ -1,4 +1,4 @@
-package hw10Task3;
+package hw10Task1;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,7 +25,7 @@ public class Client1 {
         datagramSocket = new DatagramSocket();
         datagramSocket.setBroadcast(false);
 
-        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(clientAddress), Server.SERVER_PORT);
+        DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(clientAddress), hw10Task1.Server.SERVER_PORT);
         datagramSocket.send(dp);
 
         byte[] buffer = new byte[65536];
@@ -53,6 +53,7 @@ public class Client1 {
                 System.out.println(incomingMessage);
 
                 if (outcomingMessage.equals("quit")) {
+                    datagramSocket.close();
                     break;
                 }
             }

@@ -3,6 +3,7 @@ package hw03Task1;
 import hw03Task2.ObjectBox;
 
 /**
+ * @author "Timohin Igor"
  * Задание 3. Доработать классы MathBox и ObjectBox таким образом, чтобы MathBox был наследником ObjectBox.
  * Необходимо сделать такую связь, правильно распределить поля и методы.
  * Функциональность в целом должна сохраниться.

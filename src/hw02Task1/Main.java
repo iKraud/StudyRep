@@ -11,7 +11,7 @@ import java.util.Scanner;
  * Смоделировав ошибку «ArrayIndexOutOfBoundsException»
  * Вызвав свой вариант ошибки через оператор throw
  */
-public class Task1 {
+public class Main {
     public static void main(String[] args) throws SomeException {
         String hw = "Hello, World!";
         Scanner sc = new Scanner(System.in);
@@ -41,11 +41,5 @@ public class Task1 {
         finally {
             System.out.println(hw);
         }
-    }
-}
-
-class SomeException extends Exception {
-    public SomeException (String message) {
-        super (message);
     }
 }

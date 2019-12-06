@@ -10,7 +10,7 @@ import java.util.Scanner;
  * Если квадрат целой части q числа равен k, то вывести это число на экран.
  * Предусмотреть что первоначальные числа могут быть отрицательные, в этом случае генерировать исключение.
  */
-public class Task2 {
+public class Main {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         Random rnd = new Random();

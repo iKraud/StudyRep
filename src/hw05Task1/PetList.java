@@ -42,20 +42,38 @@ class PetList {
         for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
             list.add(el.getValue());
         }
-        Collections.sort(list, new Comparator() {
-            @Override
-            public int compare(Object o, Object t1) {
-                double c;
-                c = ((Animal) o).getOwner().getName().compareTo(((Animal) t1).getOwner().getName());
-                if (c == 0) {
-                    c = ((Animal) o).getNickname().compareTo(((Animal) t1).getNickname());
-                }
-                if (c == 0) {
-                    c = ((Animal) o).getWeight() - ((Animal) t1).getWeight();
-                }
-                return (int) c;
-            }
-        });
+
+// сортировка с лямбдами #2
+        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName()).thenComparing(Animal::getNickname).thenComparingDouble(Animal::getWeight));
+
+// сортировка с лямбдами #1
+//        Collections.sort(list, (o, t1) -> {
+//            double c;
+//            c = o.getOwner().getName().compareTo(t1.getOwner().getName());
+//            if (c == 0) {
+//                c = o.getNickname().compareTo(t1.getNickname());
+//            }
+//            if (c == 0) {
+//                c = (int) o.getWeight() - (int) t1.getWeight();
+//            }
+//            return (int) c;
+//        });
+
+// Сортировка до лямбд...
+//        Collections.sort(list, new Comparator() {
+//            @Override
+//            public int compare(Object o, Object t1) {
+//                double c;
+//                c = ((Animal) o).getOwner().getName().compareTo(((Animal) t1).getOwner().getName());
+//                if (c == 0) {
+//                    c = ((Animal) o).getNickname().compareTo(((Animal) t1).getNickname());
+//                }
+//                if (c == 0) {
+//                    c = ((Animal) o).getWeight() - ((Animal) t1).getWeight();
+//                }
+//                return (int) c;
+//            }
+//        });
 
         for (Object el : list) {
             System.out.println(el);

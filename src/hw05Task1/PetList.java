@@ -1,5 +1,7 @@
 package hw05Task1;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.*;
 
 public class PetList {
@@ -77,8 +79,12 @@ public class PetList {
 //            }
 //        });
 
-        for (Object el : list) {
-            System.out.println(el);
-        }
+// вывод на экран с лямбдами
+        list.forEach(System.out::println);
+
+// вывод на экран до лямбд
+//        for (Object el : list) {
+//            System.out.println(el);
+//        }
     }
 }

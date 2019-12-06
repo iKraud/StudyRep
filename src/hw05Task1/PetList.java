@@ -2,7 +2,7 @@ package hw05Task1;
 
 import java.util.*;
 
-class PetList {
+public class PetList {
     private static int count = 0;
     private Map<Integer, Animal> petMap = new HashMap<>();
 
@@ -24,7 +24,9 @@ class PetList {
         System.out.println("Найдено " + total + " питомцев с такой кличкой!");
     }
     public void editPetInfo (int id, String newNickName, double newWeight) {
-        if (petMap.containsKey(id)) {
+//        Check check = (m, d) -> m.containsValue(d); //вариант #1
+        Check check = Map::containsValue; //вариант #2
+        if (check.include(petMap,id)) { // было "if (petMap.containsKey(id))"
             for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
                 if (el.getKey() == id) {
                     el.getValue().setNickname(newNickName);

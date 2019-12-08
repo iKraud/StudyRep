@@ -22,7 +22,7 @@ public class Client2 {
         myName = "[" + br.readLine() + "]";
         byte[] b = myName.getBytes();
 
-        datagramSocket = new DatagramSocket();
+        datagramSocket = new DatagramSocket(7500);
         datagramSocket.setBroadcast(false);
 
         DatagramPacket dp = new DatagramPacket(b, b.length, InetAddress.getByName(clientAddress), Server.SERVER_PORT);

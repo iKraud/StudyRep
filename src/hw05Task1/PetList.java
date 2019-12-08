@@ -46,7 +46,9 @@ public class PetList {
         }
 
 // сортировка с лямбдами #2
-        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName()).thenComparing(Animal::getNickname).thenComparingDouble(Animal::getWeight));
+        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName())
+                .thenComparing(Animal::getNickname)
+                .thenComparingDouble(Animal::getWeight));
 
 // сортировка с лямбдами #1
 //        Collections.sort(list, (o, t1) -> {

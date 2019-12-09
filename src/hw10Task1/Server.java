@@ -29,30 +29,32 @@ public class Server {
             byte[] buffer = new byte[65536];
             DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
             System.out.println("Сервер готов. Ожидается подключение участников...");
+
             while (true) {
                 datagramSocket.receive(incoming);
                 String s = new String(incoming.getData(), 0, incoming.getLength());
-
-                if (s.startsWith("[")) {
-                    String newComer = s.substring(s.lastIndexOf("[") + 1, s.lastIndexOf("]"));
-                    s = "Приветствуем нового участника: " + newComer;
-                    System.out.println(s);
-                    users.put(String.valueOf(incoming.getPort()), newComer);
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort()); //InetAddress.getByName("255.255.255.255")
-                    datagramSocket.setBroadcast(true);
-                    datagramSocket.send(dp);
-                } else if (!s.toLowerCase().equals("quit")) {
-                    s = users.get(String.valueOf(incoming.getPort()))  + " написал: " + s;
-                    System.out.println(s);
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort()); //incoming.getPort()
-                    datagramSocket.setBroadcast(true);
-                    datagramSocket.send(dp);
-                } else {
-                    s = "Вы вышли из чата. До новых встреч!";
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort());
-                    datagramSocket.send(dp);
-                    System.out.println(users.get(String.valueOf(incoming.getPort())) + " покинул чат");
-                    users.remove(String.valueOf(incoming.getPort()));
+                if (!(incoming.getPort() == SERVER_PORT)) {
+                    if (s.startsWith("[")) {
+                        String newComer = s.substring(s.lastIndexOf("[") + 1, s.lastIndexOf("]"));
+                        s = "Приветствуем нового участника: " + newComer;
+                        System.out.println(s);
+                        users.put(String.valueOf(incoming.getPort()), newComer);
+                        DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), SERVER_PORT); //InetAddress.getByName("255.255.255.255")
+                        datagramSocket.setBroadcast(true);
+                        datagramSocket.send(dp);
+                    } else if (!s.toLowerCase().equals("quit")) {
+                        s = users.get(String.valueOf(incoming.getPort())) + " написал: " + s;
+                        System.out.println(s);
+                        DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), SERVER_PORT); //incoming.getPort()
+                        datagramSocket.setBroadcast(true);
+                        datagramSocket.send(dp);
+                    } else {
+                        s = "Вы вышли из чата. До новых встреч!";
+                        DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort());
+                        datagramSocket.send(dp);
+                        System.out.println(users.get(String.valueOf(incoming.getPort())) + " покинул чат");
+                        users.remove(String.valueOf(incoming.getPort()));
+                    }
                 }
             }
         }

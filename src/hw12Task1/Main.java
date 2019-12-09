@@ -10,6 +10,16 @@ package hw12Task1;
  */
 public class Main {
     public static void main(String[] args) {
-
+        List<Object[]> arr = new ArrayList<>();
+        int total = 10;
+        Random rnd = new Random();
+        for (int i = 0; i < total; i++ ) {
+            total++;
+            arr.add(new Object[10]);
+            if ((arr.size() % rnd.nextInt(10)) == 0) {
+                arr.remove(i);
+                i--;
+            }
+        }
     }
 }

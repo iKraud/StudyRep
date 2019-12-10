@@ -36,8 +36,8 @@ public class Client1 {
 
         MultiIncomeThread inThread = new MultiIncomeThread();
         inThread.start();
-        UniIncomeThread uniIncomeThread = new UniIncomeThread();
-        uniIncomeThread.start();
+//        UniIncomeThread uniIncomeThread = new UniIncomeThread();
+//        uniIncomeThread.start();
         try {
             while (true) {
                 outMessage = br.readLine();
@@ -53,7 +53,7 @@ public class Client1 {
 
                 if (outMessage.substring(outMessage.indexOf("]") + 1).equals("quit")) {
                     inThread.interrupt();
-                    uniIncomeThread.interrupt();
+//                    uniIncomeThread.interrupt();
                     socket.leaveGroup(group);
                     socket.close();
                     break;

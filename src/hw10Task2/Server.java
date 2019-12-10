@@ -20,14 +20,14 @@ import java.util.Map;
  */
 public class Server {
     static final Integer MULTI_PORT = 7000;
-    static final Integer UNI_PORT = 8000;
+//    static final Integer UNI_PORT = 8000;
     public static void main (String[] args) {
         Map<String,String> users = new HashMap<>();
         byte[] buffer = new byte[65536];
         DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
         try {
             MulticastSocket multiSocket = new MulticastSocket(MULTI_PORT);
-            DatagramSocket uniSocket = new DatagramSocket(UNI_PORT);
+//            DatagramSocket uniSocket = new DatagramSocket(UNI_PORT);
             InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
             System.out.println("Добро пожаловать!");
             System.out.println("Для персональных сообщений - '@ИмяАдресата Текст'");
@@ -54,15 +54,15 @@ public class Server {
                         multiSocket.send(dp);
                     } else { //-> сообщение на конкретного пользователя
                         message = users.getOrDefault(senderAddress, "") + " написал Вам: " + message;
-//                        System.out.println(message);
                         InetAddress recipientAddress = null;
                         for (Map.Entry<String,String> el : users.entrySet()) {
                             if (el.getValue().equals(recipientName)) {
                                 recipientAddress = InetAddress.getByName(el.getKey());
                             }
                         }
-                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, recipientAddress, UNI_PORT);
-                        uniSocket.send(dp);
+                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, recipientAddress, MULTI_PORT); //UNI_PORT
+                        multiSocket.send(dp);
+//                        uniSocket.send(dp);
                     }
                 } else { //если сообщение равно quit - уведомляем и удаляем
                     message = users.getOrDefault(senderAddress,"ПользовательНеНайден") + " покинул чат";

@@ -25,7 +25,6 @@ public class Server {
         DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
         try {
             MulticastSocket multiSocket = new MulticastSocket(MULTI_PORT);
-            InetAddress group = InetAddress.getByName("230.0.0.0");
             System.out.println("Добро пожаловать!");
             System.out.println("Для персональных сообщений - '@ИмяАдресата Текст'");
 
@@ -40,32 +39,24 @@ public class Server {
                 if (!(users.containsKey(senderAddress))) { //если пользователя с таким адресом ещё нет - добавляем
                     users.put(senderAddress, message);
                     message = "Приветствуем нового участника: " + message;
-                    System.out.println(message);
-                    DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT);
-                    multiSocket.send(dp);
+                    sendMessage(message);
                 } else if (!(message.toLowerCase().equals("quit"))) { //если сообщение не quit - отправляем ->
                     if (recipientName.equals("Server")) { //-> сообщение на всех
                         message = users.getOrDefault(senderAddress, "") + " написал: " + message;
-                        System.out.println(message);
-                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT);
-                        multiSocket.send(dp);
+                        sendMessage(message);
                     } else { //-> сообщение на конкретного пользователя
                         message = users.getOrDefault(senderAddress, "") + " написал Вам: " + message;
-                        InetAddress recipientAddress = null;
-                        for (Map.Entry<String,String> el : users.entrySet()) {
+                        for (Map.Entry<String,String> el : users.entrySet()) { //ищем по имени адрес получателя
                             if (el.getValue().equals(recipientName)) {
-                                recipientAddress = InetAddress.getByName(el.getKey());
+                                InetAddress recipientAddress = InetAddress.getByName(el.getKey());
+                                sendMessage(message, recipientAddress);
+                                break;
                             }
                         }
-                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, recipientAddress, MULTI_PORT);
-                        multiSocket.send(dp);
                     }
                 } else { //если сообщение равно quit - уведомляем и удаляем
                     message = users.getOrDefault(senderAddress,"ПользовательНеНайден") + " покинул чат";
-                    System.out.println(message);
-                    DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT);
-                    multiSocket.send(dp);
-
+                    sendMessage(message);
                     users.remove(senderAddress);
                 }
             }
@@ -73,5 +64,19 @@ public class Server {
         catch (IOException e) {
             System.err.println("IOException " + e);
         }
+    }
+    private static void sendMessage(String mes) throws IOException { // для массовой рассылки
+        MulticastSocket multiSocket = new MulticastSocket(MULTI_PORT);
+        InetAddress group = InetAddress.getByName("230.0.0.0");
+        System.out.println(mes);
+        DatagramPacket dp = new DatagramPacket(mes.getBytes(), mes.getBytes().length, group, MULTI_PORT);
+        multiSocket.send(dp);
+        multiSocket.close();
+    }
+    private static void sendMessage(String mes, InetAddress inetAddress) throws IOException { //для точечной рассылки
+        MulticastSocket multiSocket = new MulticastSocket(MULTI_PORT);
+        DatagramPacket dp = new DatagramPacket(mes.getBytes(), mes.getBytes().length, inetAddress, MULTI_PORT);
+        multiSocket.send(dp);
+        multiSocket.close();
     }
 }

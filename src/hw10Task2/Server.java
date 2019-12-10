@@ -1,7 +1,8 @@
-package hw10Task2;
+package hw10Task1;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
 import java.util.HashMap;
@@ -18,40 +19,57 @@ import java.util.Map;
  * b. добавить возможность выхода из чата с помощью написанной в чате команды «quit»
  */
 public class Server {
-    public static final Integer PORT = 7000;
+    static final Integer MULTI_PORT = 7000;
+    static final Integer UNI_PORT = 8000;
     public static void main (String[] args) {
         Map<String,String> users = new HashMap<>();
+        byte[] buffer = new byte[65536];
+        DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
         try {
-            MulticastSocket socket = new MulticastSocket(PORT);
+            MulticastSocket multiSocket = new MulticastSocket(MULTI_PORT);
+            DatagramSocket uniSocket = new DatagramSocket(UNI_PORT);
             InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
-            socket.setBroadcast(true);
+            System.out.println("Добро пожаловать!");
+            System.out.println("Для персональных сообщений - '@ИмяАдресата Текст'");
 
-            byte[] buffer = new byte[65536];
-            DatagramPacket incoming = new DatagramPacket(buffer, buffer.length);
-            System.out.println("Сервер готов. Ожидается подключение участников...");
-
+            //[senderAddress@recipientName]message - образец послания
             while (true) {
-                socket.receive(incoming);
-                String s = new String(incoming.getData(), 0, incoming.getLength());
-                if (s.startsWith("[")) {
-                    String newComer = s.substring(s.lastIndexOf("[") + 1, s.lastIndexOf("]"));
-                    s = "Приветствуем нового участника: " + newComer;
-                    System.out.println(s);
-                    users.put(String.valueOf(incoming.getAddress()), newComer);
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, group, PORT); //InetAddress.getByName("255.255.255.255")
-                    socket.send(dp);
-                } else if (!s.toLowerCase().equals("quit")) {
-//                    s = users.get(String.valueOf(incoming.getPort())) + " написал: " + s;
-                    s = users.get(String.valueOf(incoming.getAddress())) + " написал: " + s;
-                    System.out.println(s);
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, group, PORT); //incoming.getPort()
-                    socket.send(dp);
-                } else {
-                    s = "Вы вышли из чата. До новых встреч!";
-                    DatagramPacket dp = new DatagramPacket(s.getBytes(), s.getBytes().length, incoming.getAddress(), incoming.getPort());
-                    socket.send(dp);
-                    System.out.println(users.get(String.valueOf(incoming.getAddress())) + " покинул чат");
-                    users.remove(String.valueOf(incoming.getAddress()));
+                multiSocket.receive(incoming);
+                String inMessage = new String(incoming.getData(), 0, incoming.getLength());
+                String senderAddress = inMessage.substring(inMessage.indexOf("[") + 1, inMessage.indexOf("@"));
+                String recipientName = inMessage.substring(inMessage.indexOf("@") + 1, inMessage.indexOf("]"));
+                String message = inMessage.substring(inMessage.indexOf("]") + 1);
+
+                if (!(users.containsKey(senderAddress))) { //если пользователя с таким адресом ещё нет - добавляем
+                    users.put(senderAddress, message);
+                    message = "Приветствуем нового участника: " + message;
+                    System.out.println(message);
+                    DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT); //InetAddress.getByName("255.255.255.255")
+                    multiSocket.send(dp);
+                } else if (!(message.toLowerCase().equals("quit"))) { //если сообщение не quit - отправляем ->
+                    if (recipientName.equals("Server")) { //-> сообщение на всех
+                        message = users.getOrDefault(senderAddress, "") + " написал: " + message;
+                        System.out.println(message);
+                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT); //incoming.getPort()
+                        multiSocket.send(dp);
+                    } else { //-> сообщение на конкретного пользователя
+                        message = users.getOrDefault(senderAddress, "") + " написал Вам: " + message;
+//                        System.out.println(message);
+                        InetAddress recipientAddress = null;
+                        for (Map.Entry<String,String> el : users.entrySet()) {
+                            if (el.getValue().equals(recipientName)) {
+                                recipientAddress = InetAddress.getByName(el.getKey());
+                            }
+                        }
+                        DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, recipientAddress, UNI_PORT);
+                        uniSocket.send(dp);
+                    }
+                } else { //если сообщение равно quit - уведомляем и удаляем
+                    message = users.getOrDefault(senderAddress,"ПользовательНеНайден") + " покинул чат";
+                    DatagramPacket dp = new DatagramPacket(message.getBytes(), message.getBytes().length, group, MULTI_PORT); //InetAddress.getByName(senderAddress)
+                    multiSocket.send(dp);
+                    users.remove(senderAddress);
+                    System.out.println(message);
                 }
             }
         }

@@ -1,5 +1,9 @@
 package hw12Task1;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 /**
  * @author "Timohin Igor"
  * Задание 1.     Необходимо создать программу, которая продемонстрирует утечку памяти в Java.

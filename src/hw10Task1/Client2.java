@@ -13,7 +13,7 @@ public class Client2 {
         String inMessage;
         String outMessage;
         String recipientName;
-        InetAddress group = InetAddress.getByName("230.0.0.0"); //255.255.255.255
+        InetAddress group = InetAddress.getByName("230.0.0.0");
 
         BufferedReader br = new BufferedReader (new InputStreamReader(System.in));
 
@@ -36,8 +36,7 @@ public class Client2 {
 
         MultiIncomeThread inThread = new MultiIncomeThread();
         inThread.start();
-//        UniIncomeThread uniIncomeThread = new UniIncomeThread();
-//        uniIncomeThread.start();
+
         try {
             while (true) {
                 outMessage = br.readLine();
@@ -53,7 +52,6 @@ public class Client2 {
 
                 if (outMessage.substring(outMessage.indexOf("]") + 1).equals("quit")) {
                     inThread.interrupt();
-//                    uniIncomeThread.interrupt();
                     socket.leaveGroup(group);
                     socket.close();
                     break;

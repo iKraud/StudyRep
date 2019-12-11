@@ -1,6 +1,5 @@
 package hw12Task1;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -13,25 +12,27 @@ import java.util.Random;
  *
  * Задание 2. Доработать программу так, чтобы ошибка OutOfMemoryError возникала в Metaspace /Permanent Generation
  */
+//-XX:MetaspaceSize=1m -XX:MaxMetaspaceSize=10m -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80
 public class Main {
-    public static void main(String[] args) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, ClassNotFoundException, NoSuchFieldException {
-//        List<Object[]> arr = new ArrayList<>();
-        List<Class> arr = new ArrayList<>();
+    public static void main(String[] args) {
+        List<MyClass> arr = new ArrayList<>();
+//        List<String> arrString = new ArrayList<>();
         int total = 10;
+        String string = "";
+        int j = 0;
         Random rnd = new Random();
-        for (int i = 0; i < total; i++ ) {
+        for (int i = 0; i < total; i++) {
             total++;
-
-            ClassLoader classLoader = new MyClassLoader();
-            Class<?> cls = Class.forName("hw12Task1.MyClass", true, classLoader);
-            arr.add(cls);
-            Object instance = cls.getDeclaredConstructor().newInstance();
-            cls.getMethod("print").invoke(instance);
-//            arr.add(new Object[3]);
-//            if ((arr.size() % (rnd.nextInt(total) + 1)) == 0) {
-//                arr.remove(i);
-//                i--;
-//            }
+            MyClass myClass = new MyClass();
+            arr.add(myClass);
+            string = new String(String.valueOf(i));
+//            string += i;
+            if ((arr.size() % (rnd.nextInt(total) + 1)) == 0) {
+                arr.remove(i);
+                i--;
+                System.out.println(++j + " " + total);
+//                arrString.add(string);
+            }
         }
     }
 }

@@ -15,23 +15,20 @@ import java.util.Random;
 //-XX:MetaspaceSize=1m -XX:MaxMetaspaceSize=10m -XX:MinMetaspaceFreeRatio=50 -XX:MaxMetaspaceFreeRatio=80
 public class Main {
     public static void main(String[] args) {
-        List<MyClass> arr = new ArrayList<>();
-//        List<String> arrString = new ArrayList<>();
+        List<String> arrString = new ArrayList<>();
         int total = 10;
         String string = "";
         int j = 0;
         Random rnd = new Random();
         for (int i = 0; i < total; i++) {
             total++;
-            MyClass myClass = new MyClass();
-            arr.add(myClass);
-            string = new String(String.valueOf(i));
-//            string += i;
-            if ((arr.size() % (rnd.nextInt(total) + 1)) == 0) {
-                arr.remove(i);
+            string = new String(string + i);
+            arrString.add(string);
+//            System.out.println(++j + " " + total + " " + string);
+
+            if ((arrString.size() % (rnd.nextInt(total) + 1)) == 0) {
+                arrString.remove(i);
                 i--;
-                System.out.println(++j + " " + total);
-//                arrString.add(string);
             }
         }
     }

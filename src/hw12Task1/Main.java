@@ -18,29 +18,27 @@ import java.util.Random;
 //-XX:MetaspaceSize=1m -XX:MaxMetaspaceSize=10m
 public class Main {
     public static void main(String[] args) {
-        option(2);
+        option(2); // 1 - java.lang.OutOfMemoryError: Java heap space, всё остальное - java.lang.OutOfMemoryError: Metaspace
     }
     static void option(int x) {
-        switch (x) {
-            case 1:
-                List<String> arr = new ArrayList<>();
-                String string = "";
-                int total = 10;
-                Random rnd = new Random();
-                for (int i = 0; i < total; i++) {
-                    total++;
-                    arr.add(string + i);
-                    if ((arr.size() % (rnd.nextInt(total) + 1)) == 0) {
-                        arr.remove(i);
-                        i--;
-                    }
+        if (x == 1) {
+            List<String> arr = new ArrayList<>();
+            String string = "";
+            int total = 10;
+            Random rnd = new Random();
+            for (int i = 0; i < total; i++) {
+                total++;
+                arr.add(string + i);
+                if ((arr.size() % (rnd.nextInt(total) + 1)) == 0) {
+                    arr.remove(i);
+                    i--;
                 }
-                break;
-            default:
-//                File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw12Task1\\MyClass.java"); //компиляция на ходу
-                File sourceFile = new File("R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw12Task1\\MyClass.java"); //компиляция на ходу
-                JavaCompiler compiler = ToolProvider.getSystemJavaCompiler(); //компиляция на ходу - можно было использовать javac
-                compiler.run(null, null, null, sourceFile.getPath()); //компиляция на ходу
+            }
+        } else {
+            File sourceFile = new File("C:\\Java\\IdeaProjects\\untitled\\src\\hw12Task1\\MyClass.java"); //компиляция на ходу
+//                File sourceFile = new File("R:\\ССиОР\\СРТиС\\03 - Разработка\\Тимохин И.В\\055_IdeaProjects\\src\\hw12Task1\\MyClass.java"); //компиляция на ходу
+            JavaCompiler compiler = ToolProvider.getSystemJavaCompiler(); //компиляция на ходу - можно было использовать javac
+            compiler.run(null, null, null, sourceFile.getPath()); //компиляция на ходу
         }
     }
 }

@@ -10,7 +10,6 @@ package hw15Task1;
  *
  * Типы полей на ваше усмотрению, возможно использование VARCHAR(255)
  *
- *
  * 2) Через jdbc интерфейс сделать запись данных(INSERT) в таблицу
  * a) Используя параметризированный запрос
  * b) Используя batch процесс
@@ -21,4 +20,9 @@ package hw15Task1;
  * намеренно ввести некорректные данные на последней операции, что бы транзакция откатилась к логической точке SAVEPOINT A
  */
 public class Main {
+    public static void main(String[] args) {
+        DB db = new DB();
+        db.renewTables();
+        db.insertPrepared();
+    }
 }

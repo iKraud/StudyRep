@@ -41,12 +41,15 @@ public class PetList {
     }
     public void printPetList () {
         List<Animal> list = new ArrayList<>();
+//        petMap.forEach(list::add); //так не работает...
         for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
             list.add(el.getValue());
         }
 
 // сортировка с лямбдами #2
-        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName()).thenComparing(Animal::getNickname).thenComparingDouble(Animal::getWeight));
+        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName())
+                .thenComparing(Animal::getNickname)
+                .thenComparingDouble(Animal::getWeight));
 
 // сортировка с лямбдами #1
 //        Collections.sort(list, (o, t1) -> {

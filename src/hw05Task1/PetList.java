@@ -24,8 +24,8 @@ public class PetList {
         System.out.println("Найдено " + total + " питомцев с такой кличкой!");
     }
     public void editPetInfo (int id, String newNickName, double newWeight) {
-//        Check check = (m, d) -> m.containsValue(d); //вариант #1
-        Check check = Map::containsValue; //вариант #2
+//        Check check = (m, d) -> m.containsKey(d); //вариант #1
+        Check check = Map::containsKey; //вариант #2
         if (check.include(petMap,id)) { // было "if (petMap.containsKey(id))"
             for (Map.Entry<Integer, Animal> el : petMap.entrySet()) {
                 if (el.getKey() == id) {
@@ -46,9 +46,7 @@ public class PetList {
         }
 
 // сортировка с лямбдами #2
-        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName())
-                .thenComparing(Animal::getNickname)
-                .thenComparingDouble(Animal::getWeight));
+        list.sort(Comparator.comparing((Animal o) -> o.getOwner().getName()).thenComparing(Animal::getNickname).thenComparingDouble(Animal::getWeight));
 
 // сортировка с лямбдами #1
 //        Collections.sort(list, (o, t1) -> {

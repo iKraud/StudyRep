@@ -21,8 +21,12 @@ package hw15Task1;
  */
 public class Main {
     public static void main(String[] args) {
-        DB db = new DB();
-        db.renewTables();
-        db.insertPrepared();
+//        DBPostgreSL dbPostgreSL = new DBPostgreSL();
+//        dbPostgreSL.renewTables();
+//        dbPostgreSL.insertPrepared();
+
+        DBSQLite dbsqLite = new DBSQLite();
+        dbsqLite.renewTables();
+//        dbsqLite.insertPrepared();
     }
 }

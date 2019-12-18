@@ -1,5 +1,9 @@
 package hw15Task1;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Savepoint;
+
 /**
  * @author "Timohin Igor"
  * 1)    Спроектировать базу
@@ -22,8 +26,21 @@ package hw15Task1;
 public class Main {
     public static void main(String[] args) {
         DBSQLite dbsqLite = new DBSQLite();
-        dbsqLite.renewAllTables();
-        dbsqLite.insertPreparedToUser(1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
-        dbsqLite.insertBatchToRole(5);
+        Connection cn = dbsqLite.connect();
+        dbsqLite.renewAllTables(cn);
+        dbsqLite.insertPreparedToUser(cn,1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
+        dbsqLite.insertPreparedToUser(cn,2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
+        dbsqLite.insertBatchToUserRole(cn,1, 3);
+        dbsqLite.insertBatchToUserRole(cn,2, 2 + 4);
+        try {
+            cn.setAutoCommit(false);
+            Savepoint savepoint = cn.setSavepoint("A");
+            dbsqLite.insertBatchToUserRole(cn,1, 7);
+            cn.rollback(savepoint);
+            dbsqLite.insertBatchToUserRole(cn,2, 1);
+            cn.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

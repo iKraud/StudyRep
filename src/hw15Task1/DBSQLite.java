@@ -1,7 +1,6 @@
 package hw15Task1;
 
 import java.sql.*;
-import java.util.Random;
 
 public class DBSQLite {
     public Connection connect() {
@@ -15,8 +14,8 @@ public class DBSQLite {
         }
         return connection;
     }
-    public void renewAllTables() {
-        try (Statement statement = connect().createStatement()) {
+    public void renewAllTables(Connection cn) {
+        try (Statement statement = cn.createStatement()) {
             statement.execute("drop table if exists USER;");
             statement.execute("create table USER ( \n" +
                     "id integer primary key not null, \n" +
@@ -27,23 +26,18 @@ public class DBSQLite {
                     "email text null, \n" +
                     "description text null);");
 
-            statement.execute("drop table if exists roleName;");
-            statement.execute("create table roleName ( \n" +
-                    "id integer primary key not null, \n" +
-                    "name text not null);");
-            statement.execute("insert into roleName values (1, 'Administration'), \n" +
-                    "(2, 'Clients'), \n" +
-                    "(3, 'Billing');");
-
             statement.execute("drop table if exists ROLE;");
             statement.execute("create table ROLE ( \n" +
                     "id integer primary key not null, \n" +
-                    "name text references roleName(name), \n" +
-                    "description text null);");
+                    "name text not null, \n" +
+                    "description integer not null);");
+            statement.execute("insert into ROLE values (1, 'Administration', 1), \n" +
+                    "(2, 'Clients', 2), \n" +
+                    "(3, 'Billing', 4);");
 
             statement.execute("drop table if exists USER_ROLE;");
             statement.execute("create table USER_ROLE ( \n" +
-                    "id integer primary key, \n" +
+                    "id integer primary key autoincrement, \n" +
                     "user_id integer references USER(id) not null, \n" +
                     "role_id integer references ROLE(id) not null);");
         } catch (SQLException e) {
@@ -51,8 +45,8 @@ public class DBSQLite {
         }
     }
 
-    public void insertPreparedToUser (int id, String name, String birthday, int loginID, String city, String email, String description) {
-        try (PreparedStatement preparedStatement = connect()
+    public void insertPreparedToUser (Connection cn, int id, String name, String birthday, int loginID, String city, String email, String description) {
+        try (PreparedStatement preparedStatement = cn
                 .prepareStatement("insert into USER values (?,?,?,?,?,?,?)")) {
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, name);
@@ -67,24 +61,19 @@ public class DBSQLite {
         }
     }
 
-    public void insertBatchToRole (int amountOfBatch) {
-        Random rnd = new Random();
+    public void insertBatchToUserRole (Connection cn, int userID, int roleSum) {
         ResultSet resultSet;
-        String strRes = null;
-        try (PreparedStatement preparedStatement = connect()
-                .prepareStatement("insert into ROLE values (?,?,?)")) {
-            for (int i = 1; i <= amountOfBatch; i++) {
-                try (Statement statement = connect().createStatement()) {
-                    resultSet = statement.executeQuery("select name from roleName where id = " + (rnd.nextInt(3) + 1));
-                    strRes = resultSet.getString("name");
-                } catch (SQLException e) {
-                    e.printStackTrace();
+        try (Statement statement = cn.createStatement();
+            PreparedStatement preparedStatement = cn.prepareStatement("insert into USER_ROLE (user_id, role_id) values (" + userID + ", ?);" )) {
+            int colCount = statement.executeQuery("select count(*) from ROLE").getInt(1);
+            for (int i = 1; i <= colCount; i++) {
+                resultSet = statement.executeQuery("select description from ROLE where id =" + i);
+                resultSet.next();
+                int roleBit = resultSet.getInt(1);
+                if ((roleSum & roleBit) != 0) {
+                    preparedStatement.setInt(1, roleBit);
+                    preparedStatement.addBatch();
                 }
-
-                preparedStatement.setInt(1, i);
-                preparedStatement.setString(2, strRes);
-                preparedStatement.setString(3,"default");
-                preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
         } catch (SQLException e) {

@@ -21,12 +21,9 @@ package hw15Task1;
  */
 public class Main {
     public static void main(String[] args) {
-//        DBPostgreSL dbPostgreSL = new DBPostgreSL();
-//        dbPostgreSL.renewTables();
-//        dbPostgreSL.insertPrepared();
-
         DBSQLite dbsqLite = new DBSQLite();
-        dbsqLite.renewTables();
-//        dbsqLite.insertPrepared();
+        dbsqLite.renewAllTables();
+        dbsqLite.insertPreparedToUser(1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
+        dbsqLite.insertBatchToRole(5);
     }
 }

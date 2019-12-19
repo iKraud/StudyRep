@@ -1,8 +1,6 @@
 package hw15Task1;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Savepoint;
+import java.sql.*;
 
 /**
  * @author "Timohin Igor"
@@ -30,8 +28,11 @@ public class Main {
         dbsqLite.renewAllTables(cn);
         dbsqLite.insertPreparedToUser(cn,1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
         dbsqLite.insertPreparedToUser(cn,2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
+        dbsqLite.insertPreparedToUser(cn,3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
+
         dbsqLite.insertBatchToUserRole(cn,1, 3);
         dbsqLite.insertBatchToUserRole(cn,2, 2 + 4);
+        dbsqLite.selectFromUser(cn, 123, "Adam");
         try {
             cn.setAutoCommit(false);
             Savepoint savepoint = cn.setSavepoint("A");

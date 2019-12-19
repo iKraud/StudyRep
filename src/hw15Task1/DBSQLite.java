@@ -21,7 +21,7 @@ public class DBSQLite {
                     "id integer primary key not null, \n" +
                     "name text null, \n" +
                     "birthday text null, \n" +
-                    "login_ID text null, \n" +
+                    "login_ID integer null, \n" +
                     "city text null, \n" +
                     "email text null, \n" +
                     "description text null);");
@@ -64,18 +64,33 @@ public class DBSQLite {
     public void insertBatchToUserRole (Connection cn, int userID, int roleSum) {
         ResultSet resultSet;
         try (Statement statement = cn.createStatement();
-            PreparedStatement preparedStatement = cn.prepareStatement("insert into USER_ROLE (user_id, role_id) values (" + userID + ", ?);" )) {
+             PreparedStatement preparedStatement = cn.prepareStatement("insert into USER_ROLE (user_id, role_id) values (" + userID + ", ?);" )) {
             int colCount = statement.executeQuery("select count(*) from ROLE").getInt(1);
             for (int i = 1; i <= colCount; i++) {
                 resultSet = statement.executeQuery("select description from ROLE where id =" + i);
                 resultSet.next();
                 int roleBit = resultSet.getInt(1);
                 if ((roleSum & roleBit) != 0) {
-                    preparedStatement.setInt(1, roleBit);
+                    preparedStatement.setInt(1, i);
                     preparedStatement.addBatch();
                 }
             }
             preparedStatement.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void selectFromUser (Connection cn, int loginID, String name) {
+        try (PreparedStatement preparedStatement = cn.prepareStatement("select * from USER where login_ID=? and name=?")) {
+            preparedStatement.setInt(1, loginID);
+            preparedStatement.setString(2, name);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet.next();
+            int columnCount = resultSet.getMetaData().getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                System.out.println("Столбец: " + resultSet.getMetaData().getColumnName(i) + " = " + resultSet.getString(i));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,6 +1,10 @@
 package hw15Task1;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 /**
  * @author "Timohin Igor"
@@ -22,7 +26,15 @@ import java.sql.*;
  * намеренно ввести некорректные данные на последней операции, что бы транзакция откатилась к логической точке SAVEPOINT A
  */
 public class Main {
+    private static Logger logger = Logger.getLogger(DBSQLite.class.getName());
+//    -Djava.util.logging.config.file=src/logging.properties
     public static void main(String[] args) {
+        try {
+            LogManager.getLogManager().readConfiguration();
+            logger.info("Файл конфигурации логгера успешно прочитан...");
+        } catch (IOException e) {
+            logger.log(Level.WARNING,"Ошибка при работе с точкой сохранения!", e);
+        }
         DBSQLite dbsqLite = new DBSQLite();
         Connection cn = dbsqLite.connect();
         dbsqLite.renewAllTables(cn);
@@ -32,16 +44,20 @@ public class Main {
 
         dbsqLite.insertBatchToUserRole(cn,1, 3);
         dbsqLite.insertBatchToUserRole(cn,2, 2 + 4);
-        dbsqLite.selectFromUser(cn, 123, "Adam");
+
+        dbsqLite.selectFromUser(cn, "Adam", 123);
+
         try {
             cn.setAutoCommit(false);
             Savepoint savepoint = cn.setSavepoint("A");
+            logger.info("Создана точка сохранения...");
             dbsqLite.insertBatchToUserRole(cn,1, 7);
             cn.rollback(savepoint);
+            logger.info("Выполнен откат к точке сохранения...");
             dbsqLite.insertBatchToUserRole(cn,2, 1);
             cn.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING,"Ошибка при работе с точкой сохранения!", e);
         }
     }
 }

@@ -1,10 +1,8 @@
 package hw15Task1;
 
-import java.io.IOException;
 import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author "Timohin Igor"
@@ -26,38 +24,31 @@ import java.util.logging.Logger;
  * намеренно ввести некорректные данные на последней операции, что бы транзакция откатилась к логической точке SAVEPOINT A
  */
 public class Main {
-    private static Logger logger = Logger.getLogger(DBSQLite.class.getName());
-//    -Djava.util.logging.config.file=src/logging.properties
+    private static final Logger logger = LogManager.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        try {
-            LogManager.getLogManager().readConfiguration();
-            logger.info("Файл конфигурации логгера успешно прочитан...");
-        } catch (IOException e) {
-            logger.log(Level.WARNING,"Ошибка при работе с точкой сохранения!", e);
-        }
         DBSQLite dbsqLite = new DBSQLite();
-        Connection cn = dbsqLite.connect();
-        dbsqLite.renewAllTables(cn);
-        dbsqLite.insertPreparedToUser(cn,1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
-        dbsqLite.insertPreparedToUser(cn,2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
-        dbsqLite.insertPreparedToUser(cn,3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
+        dbsqLite.renewAllTables();
+        dbsqLite.insertPreparedToUser(1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
+        dbsqLite.insertPreparedToUser(2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
+        dbsqLite.insertPreparedToUser(3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
 
-        dbsqLite.insertBatchToUserRole(cn,1, 3);
-        dbsqLite.insertBatchToUserRole(cn,2, 2 + 4);
+        dbsqLite.insertBatchToUserRole(1, 3);
+        dbsqLite.insertBatchToUserRole(2, 2 + 4);
 
-        dbsqLite.selectFromUser(cn, "Adam", 123);
+        dbsqLite.selectFromUser( "Adam", 123);
 
         try {
+            Connection cn = dbsqLite.getConnection();
             cn.setAutoCommit(false);
             Savepoint savepoint = cn.setSavepoint("A");
             logger.info("Создана точка сохранения...");
-            dbsqLite.insertBatchToUserRole(cn,1, 7);
+            dbsqLite.insertBatchToUserRole(1, 7);
             cn.rollback(savepoint);
             logger.info("Выполнен откат к точке сохранения...");
-            dbsqLite.insertBatchToUserRole(cn,2, 1);
+            dbsqLite.insertBatchToUserRole(2, 1);
             cn.commit();
         } catch (SQLException e) {
-            logger.log(Level.WARNING,"Ошибка при работе с точкой сохранения!", e);
+            logger.error("Ошибка при работе с точкой сохранения!", e);
         }
     }
 }

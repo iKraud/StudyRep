@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Configuration>
+  <Appenders>
+    <File name="file" fileName="logs/log4j/log.log">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>
+      </PatternLayout>
+    </File>
+<!--    <File name="file2" fileName="logs/log4j/log2.log">-->
+<!--      <MarkerFilter marker="consoleonly" onMatch="DENY" onMismatch="ACCEPT"/>-->
+<!--      <PatternLayout>-->
+<!--        <Pattern>%d %p %c{1.} [%t] %m %ex%n</Pattern>-->
+<!--      </PatternLayout>-->
+<!--    </File>-->
+
+    <JDBC name="db" tableName="LOGS">
+      <DriverManager connectionString="jdbc:sqlite:Inno.db" driverClassName="org.sqlite.JDBC"/>
+      <Column name="id" pattern="%u" isUnicode="false"/>
+      <Column name="date" pattern="%d" isUnicode="false"/>
+      <Column name="log_level" pattern="%level" isUnicode="false"/>
+      <Column name="message" pattern="%m" isUnicode="false"/>
+      <Column name="exception" pattern="%throwable" isUnicode="false"/>
+    </JDBC>
+
+    <Console name="stdout" target="SYSTEM_OUT">
+      <PatternLayout pattern="%m%n"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="trace">
+      <AppenderRef ref="file" level="INFO"/>
+      <AppenderRef ref="stdout" level="INFO"/>
+      <AppenderRef ref="db" level="INFO"/>
+    </Root>
+
+<!--    <Logger name="hw15Task1.Main" level="info" additivity="false">-->
+<!--      <AppenderRef ref="file" level="INFO"/>-->
+<!--      <AppenderRef ref="stdout" level="INFO"/>-->
+<!--      <AppenderRef ref="db" level="INFO"/>-->
+<!--    </Logger>-->
+  </Loggers>
+</Configuration>

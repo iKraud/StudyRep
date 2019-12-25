@@ -14,7 +14,7 @@ public class DBSQLite {
             connection = DriverManager.getConnection(url);
             logger.info("Соединение создано...");
         } catch (ClassNotFoundException | SQLException e) {
-            logger.error("Ошибка при создании соединения!");
+            logger.error("Ошибка при создании соединения!", e);
         }
         return connection;
     }
@@ -47,7 +47,7 @@ public class DBSQLite {
                     "role_id integer references ROLE(id) not null);");
             logger.info("Исходные таблицы обновлены...");
         } catch (SQLException e) {
-            logger.error("Ошибка при обновлении исходных таблиц!");
+            logger.error("Ошибка при обновлении исходных таблиц!", e);
         }
 
     }
@@ -66,7 +66,7 @@ public class DBSQLite {
             preparedStatement.execute();
             logger.info("Использован Prepared Statement...");
         } catch (SQLException e) {
-            logger.error("Ошибка при использовании Prepared Statement!");
+            logger.error("Ошибка при использовании Prepared Statement!", e);
         }
     }
 
@@ -90,7 +90,7 @@ public class DBSQLite {
             cn.close();
             logger.info("Использован Batch...");
         } catch (SQLException e) {
-            logger.error("Ошибка при использовании Batch!");
+            logger.error("Ошибка при использовании Batch!", e);
         }
     }
 
@@ -108,7 +108,7 @@ public class DBSQLite {
             cn.close();
             logger.info("Выполнен поиск пользователя");
         } catch (SQLException e) {
-            logger.error("Ошибка при поиске пользователя"); //e.getStackTrace()[1].getClassName(),
+            logger.error("Ошибка при поиске пользователя", e); //e.getStackTrace()[1].getClassName(),
         }
     }
 }

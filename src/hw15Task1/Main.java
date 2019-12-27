@@ -37,8 +37,7 @@ public class Main {
 
         dbsqLite.selectFromUser( "Adam", 123);
 
-        try {
-            Connection cn = dbsqLite.getConnection();
+        try (Connection cn = dbsqLite.getConnection()) {
             cn.setAutoCommit(false);
             Savepoint savepoint = cn.setSavepoint("A");
             logger.info("Создана точка сохранения...");

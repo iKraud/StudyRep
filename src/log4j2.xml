@@ -15,7 +15,7 @@
 <!--    </File>-->
 
     <JDBC name="db" tableName="LOGS">
-      <DriverManager connectionString="jdbc:sqlite:Inno.db" driverClassName="org.sqlite.JDBC"/>
+      <DriverManager connectionString="jdbc:postgresql://localhost:5433/InnoStudy" username="postgres" password="1" driverClassName="org.postgresql.Driver"/>
       <Column name="id" pattern="%u" isUnicode="false"/>
       <Column name="date" pattern="%d" isUnicode="false"/>
       <Column name="log_level" pattern="%level" isUnicode="false"/>

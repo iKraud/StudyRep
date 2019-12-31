@@ -26,25 +26,28 @@ import org.apache.logging.log4j.LogManager;
 public class Main {
     private static final Logger logger = LogManager.getLogger(Main.class.getName());
     public static void main(String[] args) {
-        DBSQLite dbsqLite = new DBSQLite();
-        dbsqLite.renewAllTables();
-        dbsqLite.insertPreparedToUser(1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
-        dbsqLite.insertPreparedToUser(2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
-        dbsqLite.insertPreparedToUser(3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
+        DBPostgreSQL dbPostgreSQL = new DBPostgreSQL();
+        Connection cn = dbPostgreSQL.getConnection();
+        dbPostgreSQL.renewAllTables(cn);
+        dbPostgreSQL.insertPreparedToUser(cn,1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
+        dbPostgreSQL.insertPreparedToUser(cn,2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
+        dbPostgreSQL.insertPreparedToUser(cn,3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
 
-        dbsqLite.insertBatchToUserRole(1, 3);
-        dbsqLite.insertBatchToUserRole(2, 2 + 4);
+        dbPostgreSQL.insertBatchToUserRole(cn,1, 3);
+        dbPostgreSQL.insertBatchToUserRole(cn,2, 2 + 4);
 
-        dbsqLite.selectFromUser( "Adam", 123);
-
-        try (Connection cn = dbsqLite.getConnection()) {
+        dbPostgreSQL.selectFromUser(cn, "Adam", 123);
+        logger.info("После поиска пользователя...");
+        try {
+            logger.info("Попытка setAutoCommit = false...");
             cn.setAutoCommit(false);
+            logger.info("Попытка создать точку сохранения...");
             Savepoint savepoint = cn.setSavepoint("A");
             logger.info("Создана точка сохранения...");
-            dbsqLite.insertBatchToUserRole(1, 7);
+            dbPostgreSQL.insertBatchToUserRole(cn,1, 7);
             cn.rollback(savepoint);
             logger.info("Выполнен откат к точке сохранения...");
-            dbsqLite.insertBatchToUserRole(2, 1);
+            dbPostgreSQL.insertBatchToUserRole(cn,2, 1);
             cn.commit();
         } catch (SQLException e) {
             logger.error("Ошибка при работе с точкой сохранения!", e);

@@ -4,11 +4,12 @@ import java.sql.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class DBPostgreSQL {
+public class DBPostgreSQL implements DBSQL {
     private static final Logger logger = LogManager.getLogger(Main.class.getName());
+    private Connection connection = null;
     private Statement statement;
     private PreparedStatement preparedStatement;
-    private Connection connection = null;
+    public static final String INSERT_PREPARED_TO_USER = "insert into public.USER values (?,?,?,?,?,?,?)";
 
     public Connection getConnection() {
         try {
@@ -56,7 +57,7 @@ public class DBPostgreSQL {
 
     public void insertPreparedToUser (Connection cn, int id, String name, String birthday, int loginID, String city, String email, String description) {
         try {
-            preparedStatement = cn.prepareStatement("insert into public.USER values (?,?,?,?,?,?,?)");
+            preparedStatement = cn.prepareStatement(INSERT_PREPARED_TO_USER);
             preparedStatement.setInt(1, id);
             preparedStatement.setString(2, name);
             preparedStatement.setString(3, birthday);

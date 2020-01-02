@@ -49,13 +49,9 @@ public class Main {
             logger.info("Выполнен откат к точке сохранения...");
             dbSQL.insertBatchToUserRole(cn,2, 1);
             cn.commit();
-        } catch (SQLException e) {
-            logger.error("Ошибка при работе с точкой сохранения!", e);
-        }
-        try {
             cn.close();
         } catch (SQLException e) {
-            logger.error("Не удалось закрыть соединение!", e);
+            logger.error("Ошибка при работе с точкой сохранения!", e);
         }
     }
 }

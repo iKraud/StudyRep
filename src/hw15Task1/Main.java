@@ -29,15 +29,27 @@ public class Main {
         DBSQL dbSQL = new DBPostgreSQL();
         Connection cn = dbSQL.getConnection();
         dbSQL.renewAllTables(cn);
-        dbSQL.insertPreparedToUser(cn,1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
-        dbSQL.insertPreparedToUser(cn,2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
-        dbSQL.insertPreparedToUser(cn,3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
+        User user1 = new User(1,"Adam","2010-02-01",123,"New York","adam@gmail.com","tech");
+        User user2 = new User(2,"Brian","2011-09-17",777,"Praha","byw@gmail.com","fin");
+        User user3 = new User(3,"Adam","2012-10-23",555,"London","none@gmail.com","lock");
+
+        dbSQL.insertPreparedToUser(cn, user1);
+        dbSQL.insertPreparedToUser(cn, user2);
+        dbSQL.insertPreparedToUser(cn, user3);
 
         dbSQL.insertBatchToUserRole(cn,1, 3);
         dbSQL.insertBatchToUserRole(cn,2, 2 + 4);
 
         dbSQL.selectFromUser(cn, "Adam", 123);
         logger.info("После поиска пользователя...");
+
+        for (User el : dbSQL.getAllUsers(cn)) {
+            System.out.print(el.getName() + " ");
+            System.out.print(el.getLoginID() + " ");
+            System.out.println(el.getCity());
+        }
+        logger.info("После вывода перечня пользователей...");
+
         try {
             logger.info("Попытка setAutoCommit = false...");
             cn.setAutoCommit(false);

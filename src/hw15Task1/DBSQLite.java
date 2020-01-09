@@ -4,7 +4,7 @@ import java.sql.*;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
-public class DBSQLite implements DBSQL {
+public class DBSQLite /*implements DBSQL*/ {
     private static final Logger logger = LogManager.getLogger(Main.class.getName());
     public Statement statement;
     public PreparedStatement preparedStatement;

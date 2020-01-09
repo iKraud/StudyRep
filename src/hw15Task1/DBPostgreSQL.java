@@ -1,6 +1,9 @@
 package hw15Task1;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -55,16 +58,16 @@ public class DBPostgreSQL implements DBSQL {
         }
     }
 
-    public void insertPreparedToUser (Connection cn, int id, String name, String birthday, int loginID, String city, String email, String description) {
+    public void insertPreparedToUser (Connection cn, User user) {
         try {
             preparedStatement = cn.prepareStatement(INSERT_PREPARED_TO_USER);
-            preparedStatement.setInt(1, id);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, birthday);
-            preparedStatement.setInt(4, loginID);
-            preparedStatement.setString(5, city);
-            preparedStatement.setString(6, email);
-            preparedStatement.setString(7, description);
+            preparedStatement.setInt(1, user.getId());
+            preparedStatement.setString(2, user.getName());
+            preparedStatement.setString(3, user.getBirthday());
+            preparedStatement.setInt(4, user.getLoginID());
+            preparedStatement.setString(5, user.getCity());
+            preparedStatement.setString(6, user.getEmail());
+            preparedStatement.setString(7, user.getDescription());
             preparedStatement.execute();
             preparedStatement.close();
             logger.info("Prepared Statement выполнен...");
@@ -119,4 +122,26 @@ public class DBPostgreSQL implements DBSQL {
             logger.error("Ошибка при поиске пользователя", e); //e.getStackTrace()[1].getClassName(),
         }
     }
+
+    @Override
+    public Collection<User> getAllUsers(Connection cn) {
+        Collection<User> userCollection = new ArrayList<>();
+        try (PreparedStatement preparedStatement = connection.prepareStatement("select * from public.USER");
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+            while (resultSet.next()) {
+                userCollection.add(new User(
+                    resultSet.getInt(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3),
+                    resultSet.getInt(4),
+                    resultSet.getString(5),
+                    resultSet.getString(6),
+                    resultSet.getString(7)));
+            }
+        } catch (SQLException e) {
+            logger.error("Ошибка при получении перечня пользователей", e);
+        }
+        return userCollection;
+    }
+
 }

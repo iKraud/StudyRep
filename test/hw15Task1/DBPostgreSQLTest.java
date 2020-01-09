@@ -16,6 +16,7 @@ import java.sql.Statement;
 class DBPostgreSQLTest {
     private DBSQL dbSQL;
     private Connection connection;
+    private User user;
     @Mock
     private Statement statement;
     @Mock
@@ -49,16 +50,16 @@ class DBPostgreSQLTest {
         String email = "adam@gmail.com";
         String description = "tech";
 
-        dbSQL.insertPreparedToUser(connection,id,name,birthday,loginID,city,email,description);
+        dbSQL.insertPreparedToUser(connection, user);
 
         Mockito.verify(connection, Mockito.times(1)).prepareStatement(DBPostgreSQL.INSERT_PREPARED_TO_USER);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setInt(1, id);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setString(2, name);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setString(3, birthday);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setInt(4, loginID);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setString(5, city);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setString(6, email);
-        Mockito.verify(preparedStatement, Mockito.times(1)).setString(7, description);
+        Mockito.verify(preparedStatement, Mockito.times(1)).setInt(1, user.getId());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setString(2, user.getName());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setString(3, user.getBirthday());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setInt(4, user.getLoginID());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setString(5, user.getCity());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setString(6, user.getEmail());
+        Mockito.verify(preparedStatement, Mockito.times(1)).setString(7, user.getDescription());
         Mockito.verify(preparedStatement, Mockito.times(1)).execute();
     }
 
